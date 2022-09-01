@@ -26,7 +26,7 @@ int main()
 
 	//Second
 	//User input
-	/*std::cout << "Ex.2\n";
+	std::cout << "Ex.2\n";
 	std::cout << "Input number for ex.2\n";
 	unsigned int NUMBER_FOR_2;
 	std::cin >> NUMBER_FOR_2;
@@ -55,7 +55,7 @@ int main()
 	std::cin >> NUMBER_FOR_4;
 	Ex_4_divide_by_32(NUMBER_FOR_4);
 	std::cout << NUMBER_FOR_4;
-	*/
+	
 
 	//Fifth
 	//User input

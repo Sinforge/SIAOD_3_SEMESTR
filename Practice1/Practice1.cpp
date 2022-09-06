@@ -14,11 +14,14 @@ void coutp(unsigned int x);
 
 int main()
 {
+	setlocale(LC_ALL, "");
+
+	std::cout << "Лабораторная работа номер 1 \"Побитовые операции и их применение\"\nПреподаватель: Филатов Александр Сергеевич\nРаботу выполнил: Власов Владислав Витальевич ИКБО-10-21\n\n";
 	//First
 	//DEFAULT = 0, A=10, B=11, C=12, D=13, E=14, F=15
 	//    0000 0000 0000
 	std::cout << "Ex.1\n";
-	unsigned int DEFAULT = 0x000;
+	unsigned int DEFAULT = 3;
 	Ex_1_change_bit_to_1(DEFAULT);
 
 	std::cout << std::endl;
@@ -42,7 +45,7 @@ int main()
 	std::cout << "Input number for ex.3\n";
 	std::cin >> NUMBER_FOR_3;
 	Ex_3_multiply_by_32(NUMBER_FOR_3);
-	std::cout << NUMBER_FOR_3;
+	std::cout << "Result: " << NUMBER_FOR_3;
 
 
 	std::cout << std::endl;
@@ -54,7 +57,7 @@ int main()
 	std::cout << "Input number for ex.4\n";
 	std::cin >> NUMBER_FOR_4;
 	Ex_4_divide_by_32(NUMBER_FOR_4);
-	std::cout << NUMBER_FOR_4;
+	std::cout << "Result: " << NUMBER_FOR_4 << std::endl;
 	
 
 	//Fifth
@@ -70,14 +73,14 @@ int main()
 
 }
 
-/*params
-	
-*/
-//Bit is 0
+
+//Функция для установки нечетных битов в 1
 void Ex_1_change_bit_to_1(unsigned int & number) {
 	// We need change uneven bits to 1
 	// Mask will be 1010 1010 1010
-	const unsigned int mask = 0xAAA;
+	const unsigned int mask1 = 0x55555555;
+	number = number & mask1;
+	const unsigned int mask = 0xAAAAAAAA;
 	number = number | mask;
 	coutp(number);
 }
@@ -86,7 +89,7 @@ void Ex_2_change_bit_to_0(unsigned int& number) {
 	//We need reset 4 bits from 5 to the left
 	// 1111 .... 1111 1100 0011 1111
 	// F... F C 3 F
-	const unsigned int mask = 0xFFFFFFFFFFFFFC3F;
+	const unsigned int mask = 0xFFFFFC3F;
 	number = number & mask;
 	coutp(number);
 }
@@ -110,16 +113,20 @@ void Ex_5(unsigned int& number, short bite_number) {
 	
 	int mask = INT_MAX - (INT_MAX >> 1);
 	short shift_to_right = sizeof(int) * 8 - bite_number - 2; //sizeof(int) = 4, 4 * 8 =32
-	number = number | (mask >> shift_to_right);
+	int shifted_mask = mask >> shift_to_right;
+	number = number & (~shifted_mask);
+	number = number | shifted_mask;
 	coutp(number);
 
 }
 
+
+//Функция для вывода двоичной записи заданного числа
 void coutp(unsigned int x)
 {
 	int n = sizeof(int) * 8;
 	unsigned  maska = (1 << (n - 1));
-
+	std::cout << "Number after operation: ";
 	for (int i = 1; i <= n; i++)
 	{
 		std::cout << ((x & maska) >> (n - i));

@@ -85,6 +85,7 @@ void Ex_1_change_bit_to_1(unsigned int & number) {
 	coutp(number);
 }
 
+//Устанавливает нечетные биты 4 бита слева от 5-ого в 0
 void Ex_2_change_bit_to_0(unsigned int& number) {
 	//We need reset 4 bits from 5 to the left
 	// 1111 .... 1111 1100 0011 1111
@@ -95,18 +96,20 @@ void Ex_2_change_bit_to_0(unsigned int& number) {
 }
 
 
+//Функция умножает число на 32
 void Ex_3_multiply_by_32(unsigned int& number) {
 	// number << 5 is equals number * 32
 	number = number << 5;
 }
 
+//Функция делит число на 32
 void Ex_4_divide_by_32(unsigned int& number) {
 	// number >> 5 is equals number / 32
 	number = number >> 5;
 }
 
 
-//Use if bite on position bite_number is not 1
+//Функция для установки заданного бита в 1
 void Ex_5(unsigned int& number, short bite_number) {
 	//We have mask 1000000...0...00000
 	//Should get mask 0000000...1...00000. Use >> 

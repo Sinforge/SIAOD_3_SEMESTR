@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <vector>
 using namespace std;
 #pragma once
 
@@ -10,17 +11,19 @@ void CreateFile(string FileName) {
 		cout << "file not open";
 		return;
 	}
-	int CountLines = (rand()% 10) + 1;
-	for (int i = 0; i < CountLines; i++) {
-		int CountNumbers = (rand() % 10) + 1;
-		for (int j = 0; j < CountNumbers; j++) {
-			fout << rand() % 100 << ' ';
+		int CountLines = (rand() % 10) + 1;
+		for (int i = 0; i < CountLines; i++) {
+			int CountNumbers = (rand() % 10) + 1;
+			for (int j = 0; j < CountNumbers; j++) {
+				fout << rand() % 100 << ' ';
+			}
+			if (i != CountLines - 1) {
+				fout << '\n';
+			}
 		}
-		if (i != CountLines - 1) {
-			fout << '\n';
-		}
-	}
+	
 	fout.close();
+
 }
 
 void PrintFile(string FileName) {
@@ -89,4 +92,39 @@ int GetCountNumbers(string FileName) {
 	
 	fin.close();
 	return Counter;
+}
+
+vector<int> GetAllNumbersFromFile(string FileName) {
+	vector<int> MassiveOfNumbers;
+	ifstream fin(FileName, ios::in);
+	if (!fin) {
+		cout << "file not open or not exist";
+		return MassiveOfNumbers;
+	}
+	string line;
+	int Iterator = 0;
+	int number;
+	while (!fin.eof()) {
+		fin >> number;
+		MassiveOfNumbers.push_back(number);
+	}
+
+	fin.close();
+	return MassiveOfNumbers;
+}
+
+void CreateFileAndWriteNumbers(string FileName, vector<int> &MassiveOfNumbers, int Divider ) {
+	ofstream fout(FileName, ios::out);
+	if (!fout) {
+		cout << "file not open";
+		return;
+	}
+	if (Divider == 0) {
+		Divider = 2;
+	}
+	for (int i = 0; i < MassiveOfNumbers.size(); i++) {
+		fout << MassiveOfNumbers.at(i) / Divider << " ";
+	}
+	fout.close();
+
 }

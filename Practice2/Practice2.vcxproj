@@ -130,6 +130,7 @@
     <ClCompile Include="Practice2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryFileFucntions.h" />
     <ClInclude Include="FileFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

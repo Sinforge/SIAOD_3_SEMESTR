@@ -1,0 +1,20 @@
+Nisan SkyLine
+Im owner of this car
+12344
+0
+Mitsubisi Lanser
+I am not owner of this car)
+13013
+1
+Lada Kalina
+Its desc
+32421
+0
+Porshe
+Its another desc
+41419
+1
+Toyota Camri
+Its stolen car)
+12425
+1

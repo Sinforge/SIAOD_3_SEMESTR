@@ -5,12 +5,8 @@
 using namespace std;
 #pragma once
 
-void CreateFile(string FileName) {
-	ofstream fout(FileName, ios::out);
-	if (!fout) {
-		cout << "file not open";
-		return;
-	}
+void CreateFile(ofstream& fout) {
+	
 		int CountLines = (rand() % 10) + 1;
 		for (int i = 0; i < CountLines; i++) {
 			int CountNumbers = (rand() % 10) + 1;
@@ -22,44 +18,24 @@ void CreateFile(string FileName) {
 			}
 		}
 	
-	fout.close();
 
 }
 
-void PrintFile(string FileName) {
-	ifstream fin(FileName, ios::in);
-	if (!fin) {
-		cout << "file not open or not exist";
-		return;
-	}
+void PrintFile(ifstream & fin) {
 	string line;
 	while (!fin.eof()) {
 		getline(fin, line);
 		cout << line << endl;
 	}
 	
-	fin.close();
 
 }
 
-void WriteToLastLine(string FileName, string Text) {
-	ofstream fout(FileName, ios::app);
-	if (!fout) {
-		cout << "file not open or not exist";
-		return;
-	}
+void WriteToLastLine(ofstream & fout, string Text) {
 	fout << "\n" << Text;
-	
-	fout.close();
 }
 
-int GetNumberByPos(string FileName, int Pos) {
-	ifstream fin(FileName, ios::in);
-	if (!fin) {
-		cout << "file not open or not exist";
-		fin.close();
-		return 0;
-	}
+int GetNumberByPos(ifstream & fin, int Pos) {
 	int CurrentPos = 0;
 	int Number;
 	while (!fin.eof()) {
@@ -71,18 +47,11 @@ int GetNumberByPos(string FileName, int Pos) {
 	}
 	
 	cout << "Number with current position not exist\n";
-	fin.close();
 	return 0;
 
 }
 
-int GetCountNumbers(string FileName) {
-	ifstream fin(FileName, ios::in);
-	if (!fin) {
-		cout << "file not open or not exist";
-		fin.close();
-		return 0;
-	}
+int GetCountNumbers(ifstream& fin) {
 	int Counter = 0;
 	int Number;
 	while (!fin.eof()) {
@@ -90,17 +59,11 @@ int GetCountNumbers(string FileName) {
 		Counter++;
 	}
 	
-	fin.close();
 	return Counter;
 }
 
-vector<int> GetAllNumbersFromFile(string FileName) {
+vector<int> GetAllNumbersFromFile(ifstream& fin) {
 	vector<int> MassiveOfNumbers;
-	ifstream fin(FileName, ios::in);
-	if (!fin) {
-		cout << "file not open or not exist";
-		return MassiveOfNumbers;
-	}
 	string line;
 	int Iterator = 0;
 	int number;
@@ -109,22 +72,31 @@ vector<int> GetAllNumbersFromFile(string FileName) {
 		MassiveOfNumbers.push_back(number);
 	}
 
-	fin.close();
 	return MassiveOfNumbers;
 }
 
-void CreateFileAndWriteNumbers(string FileName, vector<int> &MassiveOfNumbers, int Divider ) {
-	ofstream fout(FileName, ios::out);
-	if (!fout) {
-		cout << "file not open";
-		return;
-	}
+void CreateFileAndWriteNumbers(ofstream& fout, vector<int> &MassiveOfNumbers, int Divider ) {
 	if (Divider == 0) {
 		Divider = 2;
 	}
 	for (int i = 0; i < MassiveOfNumbers.size(); i++) {
 		fout << MassiveOfNumbers.at(i) / Divider << " ";
 	}
-	fout.close();
 
 }
+void FileOverwrite(ifstream & fin, ofstream& fout) {
+	vector<int> MassiveOfNumbers;
+	int MinNumber;
+	MassiveOfNumbers = GetAllNumbersFromFile(fin);
+	MinNumber = MassiveOfNumbers[0];
+	for (int i = 1; i < MassiveOfNumbers.size(); i++)
+	{
+		MinNumber = min(MinNumber, MassiveOfNumbers.at(i));
+
+	}
+	CreateFileAndWriteNumbers(fout, MassiveOfNumbers, MinNumber);
+}
+
+
+
+

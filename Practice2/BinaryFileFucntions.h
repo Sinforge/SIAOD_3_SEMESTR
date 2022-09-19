@@ -6,20 +6,23 @@
 using namespace std;
 
 struct CarOwner {
-	int CarId;
-	char CarModel[30];
-	char OwnerDescription[50];
-	bool IsStolen; 
+	int CarId; //номер авто
+	char CarModel[30]; // марка автомобиля
+	char OwnerDescription[50]; // Сведение о владельце
+	bool IsStolen;  // В угоне или нет
 };
 
 
+//Вывод полей структуры
 void print(CarOwner carOwner) {
 	cout << "\n\nCarId: " << carOwner.CarId << "\n"
 		<< carOwner.CarModel << "\n"
 		<< carOwner.OwnerDescription << "\n"
-		<< "Is stolen? " << carOwner.IsStolen << "\n\n\n";
+		<< "Is stolen? " << carOwner.IsStolen << "\n";
 }
 
+
+//Функция для преобразования текстовых данных из текстового файла в двоичный
 void OverwriteFromTextToBinary(ifstream& fin, ofstream& fout) {
 	CarOwner carOwner;
 	while (!fin.eof()) {
@@ -35,7 +38,7 @@ void OverwriteFromTextToBinary(ifstream& fin, ofstream& fout) {
 
 
 
-
+//Функция для преобразования текстовых данных из двоичного файла в текстовый
 void OverwriteFromBinaryToText(ifstream & fin, ofstream& fout) {
 	CarOwner carOwner1;
 	while (fin.read((char*)&carOwner1, sizeof(CarOwner))) {
@@ -47,6 +50,8 @@ void OverwriteFromBinaryToText(ifstream & fin, ofstream& fout) {
 	}
 }
 
+
+//Вывести все записи с бинарного файла
 void PrintBinaryFileData(ifstream & fin) {
 	CarOwner carOwner;
 	while (fin.read((char*)&carOwner, sizeof(CarOwner))) {
@@ -54,6 +59,7 @@ void PrintBinaryFileData(ifstream & fin) {
 	}
 }
 
+//Получить запись о владельце по позиции
 void GetOwnerInfoByPosition(ifstream& fin, int Pos) {
 	CarOwner carOwner = CarOwner();
 	fin.seekg(Pos * sizeof(CarOwner), ios::beg);//Change pointer to record with position pos
@@ -62,6 +68,7 @@ void GetOwnerInfoByPosition(ifstream& fin, int Pos) {
 }
 
 
+//Удаление записи из файла
 void DeleteRecord(fstream & f, int Key) {
 	bool RecordFound = false;
 	int Position = 0;
@@ -92,6 +99,7 @@ void DeleteRecord(fstream & f, int Key) {
 
 }
 
+//Вывести информацию об автомобилях в угоне
 vector<string> GetStoledCars(ifstream & fin) {
 	vector<string> StoledCars;
 	CarOwner carOwner;
@@ -104,6 +112,7 @@ vector<string> GetStoledCars(ifstream & fin) {
 }
 
 
+//Определяет находится автомобиль в угоне или нет
 bool CarStoledOrNot(ifstream & fin, int Key) {
 	CarOwner carOwner;
 	while (fin.read((char*)&carOwner, sizeof(CarOwner))) {

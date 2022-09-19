@@ -5,6 +5,7 @@
 using namespace std;
 #pragma once
 
+//Функция для создания текстового файла с некоторыми числами в строках
 void CreateFile(ofstream& fout) {
 	
 		int CountLines = (rand() % 10) + 1;
@@ -20,7 +21,7 @@ void CreateFile(ofstream& fout) {
 	
 
 }
-
+//Вывод содержимого текстового файла
 void PrintFile(ifstream & fin) {
 	string line;
 	while (!fin.eof()) {
@@ -31,10 +32,12 @@ void PrintFile(ifstream & fin) {
 
 }
 
+//Функция для добавления строки в конец файла
 void WriteToLastLine(ofstream & fout, string Text) {
 	fout << "\n" << Text;
 }
 
+//Функция для поиска числа по позиции в файле
 int GetNumberByPos(ifstream & fin, int Pos) {
 	int CurrentPos = 0;
 	int Number;
@@ -51,6 +54,7 @@ int GetNumberByPos(ifstream & fin, int Pos) {
 
 }
 
+//Функция для нахождения кол-ва чисел в файле
 int GetCountNumbers(ifstream& fin) {
 	int Counter = 0;
 	int Number;
@@ -62,6 +66,8 @@ int GetCountNumbers(ifstream& fin) {
 	return Counter;
 }
 
+
+//Функция для получения всех чисел из файла
 vector<int> GetAllNumbersFromFile(ifstream& fin) {
 	vector<int> MassiveOfNumbers;
 	string line;
@@ -75,15 +81,8 @@ vector<int> GetAllNumbersFromFile(ifstream& fin) {
 	return MassiveOfNumbers;
 }
 
-void CreateFileAndWriteNumbers(ofstream& fout, vector<int> &MassiveOfNumbers, int Divider ) {
-	if (Divider == 0) {
-		Divider = 2;
-	}
-	for (int i = 0; i < MassiveOfNumbers.size(); i++) {
-		fout << MassiveOfNumbers.at(i) / Divider << " ";
-	}
 
-}
+//Функция для перезаписи данных из одного файла в другой
 void FileOverwrite(ifstream & fin, ofstream& fout) {
 	vector<int> MassiveOfNumbers;
 	int MinNumber;
@@ -94,7 +93,12 @@ void FileOverwrite(ifstream & fin, ofstream& fout) {
 		MinNumber = min(MinNumber, MassiveOfNumbers.at(i));
 
 	}
-	CreateFileAndWriteNumbers(fout, MassiveOfNumbers, MinNumber);
+	if (MinNumber == 0) {
+		MinNumber = 1;
+	}
+	for (int i = 0; i < MassiveOfNumbers.size(); i++) {
+		fout << MassiveOfNumbers.at(i) / MinNumber << " ";
+	}
 }
 
 

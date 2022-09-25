@@ -5,6 +5,7 @@ using namespace std;
 struct ElementOfTable {
     int CarId = 0;
     bool IsBusy = false;
+    bool DeletedOrNot = false;
     int FileIndex =  0;
     ElementOfTable* Next = NULL;
 };
@@ -20,24 +21,29 @@ struct HashTable {
     }
 };
 
-int GetHash(int Key) {
-    return Key % 100;
+int GetHash(HashTable HashTable, int Key) {
+    return Key % HashTable.Length;
 }
 
 
 
 
 
-void InsertKey(HashTable& HashTable, int Key) {
-    ElementOfTable  * Element = HashTable.Table[GetHash(Key)];
+int InsertKey(HashTable& HashTable, int Key, int FileIndex = 0) {
+    ElementOfTable  * Element = HashTable.Table[GetHash(HashTable, Key)];
     while (true) {
-        if (Element->IsBusy && Element->CarId == Key) {
-            cout << "Current element already exist\n";
+        if (Element->IsBusy && Element->CarId == Key) {//Если имеется такой элемент в хеш-таблице
+            return -1;
         }
-        if (!Element->IsBusy) {
+        if (Element->CarId == Key && Element->DeletedOrNot) { //Если в хеш-таблице есть такой элемент, но он удален
+            Element->DeletedOrNot = false;
+            return 0;
+        }
+        if (!Element->IsBusy) { //Если дошли до не занятого элемента
             Element->CarId = Key;
+            Element->FileIndex = FileIndex;
             Element->IsBusy = true;
-            break;
+            return 0;
         }
         if (Element->Next == NULL) {
             Element->Next = new ElementOfTable();
@@ -47,30 +53,48 @@ void InsertKey(HashTable& HashTable, int Key) {
     }
 }
 
-void DeleteKey(HashTable& HashTable, int Key) {
-    ElementOfTable* Element = HashTable.Table[GetHash(Key)];
+//Возвращает позицию удаленного элемента
+int DeleteKey(HashTable& HashTable, int Key, int LastPosition = 0) {
+   
+    ElementOfTable* Element = HashTable.Table[GetHash(HashTable, Key)];
     ElementOfTable* PreviosElement = NULL;
-    while (Element != NULL) {
-        if (!Element->IsBusy) {
-            cout << "Element with input key not found\n";
+    int FileIndex;
+    while (Element != NULL) {//Пока не прошлись по всему списку
+        if (!Element->IsBusy) { //Если дошли до элемента который свободен, то искомого уже не найдем
+            return -1;
             break;
         }
-        if (Element->CarId == Key) {
-            if (PreviosElement == NULL) {
-                HashTable.Table[GetHash(Key)] = Element->Next;
-                cout << "Element was deleted\n";
-                delete(Element);
-                break;
+        if (Element->CarId == Key) {//Если нашли запись
+            if (Element->DeletedOrNot) {//Если она уже удалена
+                return -1;
+            
             }
-            PreviosElement->Next = Element->Next;
-            cout << "Element was deleted\n";
-            delete(Element);
+            FileIndex = Element->FileIndex;
+            Element->FileIndex = LastPosition; //Удаляем запись- добавляем запись вместо последней записи
+            Element->DeletedOrNot = true;
+            return FileIndex;
             break;
         }
         PreviosElement = Element;
         Element = Element->Next;
 
     }
+}
+
+int GetFileIndexById(HashTable & HashTable, int Id) {
+    ElementOfTable* Element = HashTable.Table[GetHash(HashTable, Id)];
+    while (Element != NULL) {//Пока не прошлись по всему списку
+        if (!Element->IsBusy) {//Если дошли до элемента который свободен, то искомого уже не будет
+            cout << "Element with input key not found\n";
+            return -1;
+
+        }
+        if (Element->CarId == Id && !Element->DeletedOrNot) {//Если нашли элемент с таким же ID и он не удален
+            return  Element->FileIndex;
+        }
+        Element = Element->Next;
+    }
+    return -1;
 }
 
 
@@ -80,7 +104,9 @@ void PrintElementList(ElementOfTable* Element) {
             cout << "havent values";
             break;
         }
-        cout << Element->CarId << ' ';
+        if (!Element->DeletedOrNot) {
+            cout << Element->CarId << ' ';
+        }
         Element = Element->Next;
     }
 }

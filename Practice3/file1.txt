@@ -1,0 +1,16 @@
+Nisan SkyLine
+Its description
+31415
+0
+Mitsubisi
+Its second description
+12421
+1
+Toyota
+Its third desc
+42123
+0
+Lada Calina
+Its element with collision
+32323
+0

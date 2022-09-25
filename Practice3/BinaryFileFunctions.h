@@ -39,19 +39,6 @@ void OverwriteFromTextToBinary(ifstream& fin, ofstream& fout) {
 
 
 
-//Функция для преобразования текстовых данных из двоичного файла в текстовый
-void OverwriteFromBinaryToText(ifstream& fin, ofstream& fout) {
-	CarOwner carOwner1;
-	while (fin.read((char*)&carOwner1, sizeof(CarOwner))) {
-		fout << carOwner1.CarModel << '\n'
-			<< carOwner1.OwnerDescription << '\n'
-			<< carOwner1.CarId << '\n'
-			<< carOwner1.IsStolen << '\n';
-
-	}
-}
-
-
 //Вывести все записи с бинарного файла
 void PrintBinaryFileData(ifstream& fin) {
 	CarOwner carOwner;
@@ -61,16 +48,16 @@ void PrintBinaryFileData(ifstream& fin) {
 }
 
 //Получить запись о владельце по позиции
-void GetOwnerInfoByPosition(ifstream& fin, int Pos) {
+CarOwner GetOwnerInfoByPosition(ifstream& fin, int Pos) {
 	CarOwner carOwner = CarOwner();
 	fin.seekg(Pos * sizeof(CarOwner), ios::beg);//Change pointer to record with position pos
 	fin.read((char*)&carOwner, sizeof(CarOwner));
-	print(carOwner);
+	return carOwner;
 }
 
 
 //Удаление записи из файла
-void DeleteRecord(fstream& f, int Key) {
+void DeleteRecordByKey(fstream& f, int Key) {
 	bool RecordFound = false;
 	int Position = 0;
 	CarOwner carOwner = CarOwner();
@@ -88,46 +75,29 @@ void DeleteRecord(fstream& f, int Key) {
 	}
 	CarOwner LastOwner;
 
+
+}
+
+CarOwner DeleteRecordByFileIndex(fstream& f, int FileIndex) {
+	CarOwner LastOwner, carOwner;
+
+	//Get founded record
+	f.seekg(FileIndex * sizeof(CarOwner), ios::beg);
+	f.read((char*)&carOwner, sizeof(CarOwner));
+
 	//Get last record
-	f.seekg(4 * sizeof(CarOwner), ios::beg);
+	f.seekg(3 * sizeof(CarOwner), ios::beg);
 	f.read((char*)&LastOwner, sizeof(CarOwner));
+	
 	//Put in last record founded record
-	f.seekg((-1) * sizeof(CarOwner), ios::cur);
+	f.seekg(3 * sizeof(CarOwner), ios::beg);
 	f.write((char*)&carOwner, sizeof(CarOwner));
 	//Put in founded record last record
-	f.seekg(Position * sizeof(CarOwner), ios::beg);
+	f.seekg(FileIndex * sizeof(CarOwner), ios::beg);
 	f.write((char*)&LastOwner, sizeof(CarOwner));
-
+	return LastOwner;
 }
 
 void PushBackRecord(ofstream& fout, CarOwner carOwner) {
 	fout.write((char*)&carOwner, sizeof(CarOwner));
-}
-
-//Вывести информацию об автомобилях в угоне
-vector<string> GetStoledCars(ifstream& fin) {
-	vector<string> StoledCars;
-	CarOwner carOwner;
-	while (fin.read((char*)&carOwner, sizeof(CarOwner))) {
-		if (carOwner.IsStolen) {
-			StoledCars.push_back(to_string(carOwner.CarId) + " " + carOwner.CarModel);
-		}
-	}
-	return StoledCars;
-}
-
-
-//Определяет находится автомобиль в угоне или нет
-bool CarStoledOrNot(ifstream& fin, int Key) {
-	CarOwner carOwner;
-	while (fin.read((char*)&carOwner, sizeof(CarOwner))) {
-		if (carOwner.CarId == Key) {
-			if (carOwner.IsStolen) {
-				return true;
-			}
-			return false;
-		}
-	}
-	cout << "car not found\n";
-	return false;
 }

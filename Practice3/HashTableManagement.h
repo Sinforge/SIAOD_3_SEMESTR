@@ -2,24 +2,24 @@
 #include "BinaryFileFunctions.h"
 
 using namespace std;
+
 struct ElementOfTable {
     int CarId = 0;
-    bool IsBusy = false;
-    bool DeletedOrNot = false;
     int FileIndex =  0;
-    ElementOfTable* Next = NULL;
 };
 struct HashTable {
     int Length;
-    ElementOfTable** Table;
+    vector<vector<ElementOfTable>> Table;
     void CreateTable(int Length) {
         this->Length = Length;
-        this->Table = (ElementOfTable**)malloc(Length * sizeof(ElementOfTable*));
+        Table = vector<vector<ElementOfTable>>(Length);
         for (int i = 0; i < Length; i++) {
-            Table[i] = new ElementOfTable();
+            Table[i] = vector<ElementOfTable>();
         }
     }
 };
+void ReHashTable(HashTable& HT);
+
 
 int GetHash(HashTable HashTable, int Key) {
     return Key % HashTable.Length;
@@ -27,94 +27,74 @@ int GetHash(HashTable HashTable, int Key) {
 
 
 
-
-
 int InsertKey(HashTable& HT, int Key, int FileIndex = 0) {
-    ElementOfTable  * Element = HT.Table[GetHash(HT, Key)];
-    while (true) {
-        if (Element->IsBusy && Element->CarId == Key) {//Если имеется такой элемент в хеш-таблице
+    vector<ElementOfTable> Element = HT.Table[GetHash(HT, Key)];
+    for (int i = 0; i < Element.size(); i++) {
+        if (Element[i].CarId == Key) {
+            cout << "Element with such Car Id exist\n";
             return -1;
-        }
-        if (Element->CarId == Key && Element->DeletedOrNot) { //Если в хеш-таблице есть такой элемент, но он удален
-            Element->DeletedOrNot = false;
-            return 0;
-        }
-        if (!Element->IsBusy) { //Если дошли до не занятого элемента
-            Element->CarId = Key;
-            Element->FileIndex = FileIndex;
-            Element->IsBusy = true;
-            return 0;
-        }
-        if (Element->Next == NULL) {
-            Element->Next = new ElementOfTable();
-        }
-        Element = Element->Next;
 
+        }
     }
+    if (Element.size() > 5) {
+        ReHashTable(HT);
+        return 0;
+    }
+    ElementOfTable NewElem;
+    NewElem.CarId = Key;
+    NewElem.FileIndex = FileIndex;
+    HT.Table[GetHash(HT, Key)].push_back(NewElem);
+    return 0;
 }
+
+
+void ReHashTable(HashTable& HT) {
+    int NewHashTableLength = HT.Length * 2;
+    HashTable NewTable;
+    NewTable.CreateTable(NewHashTableLength);
+    for (int i = 0; i < HT.Length; i++) {
+        for (int j = 0; j < HT.Table[i].size(); j++) {
+            InsertKey(NewTable, HT.Table[i][j].CarId, HT.Table[i][j].FileIndex);
+        }
+    }
+    HT = NewTable;
+}
+
+
+
 
 //Возвращает позицию удаленного элемента
 int DeleteKey(HashTable& HT, int Key, int LastPosition = 0) {
    
-    ElementOfTable* Element = HT.Table[GetHash(HT, Key)];
-    ElementOfTable* PreviosElement = NULL;
-    int FileIndex;
-    while (Element != NULL) {//Пока не прошлись по всему списку
-        if (!Element->IsBusy) { //Если дошли до элемента который свободен, то искомого уже не найдем
-            return -1;
-            break;
+    vector<ElementOfTable> Element = HT.Table[GetHash(HT, Key)];
+    for (int i = 0; i < Element.size(); i++) {
+        if (Element[i].CarId == Key) {
+            HT.Table[GetHash(HT, Key)].erase(HT.Table[GetHash(HT, Key)].begin() + i);
+            return i;
         }
-        if (Element->CarId == Key) {//Если нашли запись
-            if (Element->DeletedOrNot) {//Если она уже удалена
-                return -1;
-            
-            }
-            FileIndex = Element->FileIndex;
-            Element->FileIndex = LastPosition; //Удаляем запись- добавляем запись вместо последней записи
-            Element->DeletedOrNot = true;
-            return FileIndex;
-            break;
-        }
-        PreviosElement = Element;
-        Element = Element->Next;
-
     }
+    return -1;
+    
 }
 
 int GetFileIndexById(HashTable & HT, int Id) {
-    ElementOfTable* Element = HT.Table[GetHash(HT, Id)];
-    while (Element != NULL) {//Пока не прошлись по всему списку
-        if (!Element->IsBusy) {//Если дошли до элемента который свободен, то искомого уже не будет
-            cout << "Element with input key not found\n";
-            return -1;
-
+    vector<ElementOfTable> Element = HT.Table[GetHash(HT, Id)];
+    for (int i = 0; i < Element.size(); i++) {
+        if (Element[i].CarId == Id) {
+            return Element[i].FileIndex;
         }
-        if (Element->CarId == Id && !Element->DeletedOrNot) {//Если нашли элемент с таким же ID и он не удален
-            return  Element->FileIndex;
-        }
-        Element = Element->Next;
-    }
+   }
     return -1;
 }
 
 
-void PrintElementList(ElementOfTable* Element) {
-    while (Element != NULL) {
-        if (!Element->IsBusy) {
-            cout << "havent values";
-            break;
-        }
-        if (!Element->DeletedOrNot) {
-            cout << Element->CarId << ' ';
-        }
-        Element = Element->Next;
-    }
-}
 
 void PrintHashTable(HashTable& HT) {
     for (int i = 0; i < HT.Length; i++) {
         cout << "HashTable [" << i << "] : ";
-        PrintElementList(HT.Table[i]);
+        for (int j = 0; j < HT.Table[i].size(); j++) {
+            cout << HT.Table[i][j].CarId << " ";
+        }
         cout << endl;
     }
 }

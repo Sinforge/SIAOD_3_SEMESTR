@@ -16,20 +16,6 @@ void GetRecordAndInsertToHashTable(ifstream &fin, HashTable& HT, int RecordPosit
 }
 
 
-void ChangeFileIndex(HashTable& HashTable, int Id, int NewFileIndex) {
-	ElementOfTable * Element = HashTable.Table[GetHash(HashTable, Id)];
-	while (Element != NULL) {//Пока не прошлись по всему списку
-		if (!Element->IsBusy) {//Если дошли до элемента который свободен, то искомого уже не будет
-			cout << "Element with input key not found\n";
-		}
-		if (Element->CarId == Id && !Element->DeletedOrNot) {//Если нашли элемент с таким же ID и он не удален
-			Element->FileIndex = NewFileIndex;
-			break;
-		}
-		Element = Element->Next;
-	}
-}
-
 void DeleteRecordFromFileAndTable(fstream& f, HashTable& HashTable, int Key, int RecordCount) {
 	
 	
@@ -43,7 +29,6 @@ void DeleteRecordFromFileAndTable(fstream& f, HashTable& HashTable, int Key, int
 		cout << "Record not found or already deleted\n";
 	}
 	else {
-		ChangeFileIndex(HashTable, LastCarOwnerOnNewPosition.CarId, FileIndex);
 		cout << "Record successful deleted\n";
 	}
 

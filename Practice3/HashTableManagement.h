@@ -29,8 +29,8 @@ int GetHash(HashTable HashTable, int Key) {
 
 
 
-int InsertKey(HashTable& HashTable, int Key, int FileIndex = 0) {
-    ElementOfTable  * Element = HashTable.Table[GetHash(HashTable, Key)];
+int InsertKey(HashTable& HT, int Key, int FileIndex = 0) {
+    ElementOfTable  * Element = HT.Table[GetHash(HT, Key)];
     while (true) {
         if (Element->IsBusy && Element->CarId == Key) {//Если имеется такой элемент в хеш-таблице
             return -1;
@@ -54,9 +54,9 @@ int InsertKey(HashTable& HashTable, int Key, int FileIndex = 0) {
 }
 
 //Возвращает позицию удаленного элемента
-int DeleteKey(HashTable& HashTable, int Key, int LastPosition = 0) {
+int DeleteKey(HashTable& HT, int Key, int LastPosition = 0) {
    
-    ElementOfTable* Element = HashTable.Table[GetHash(HashTable, Key)];
+    ElementOfTable* Element = HT.Table[GetHash(HT, Key)];
     ElementOfTable* PreviosElement = NULL;
     int FileIndex;
     while (Element != NULL) {//Пока не прошлись по всему списку
@@ -81,8 +81,8 @@ int DeleteKey(HashTable& HashTable, int Key, int LastPosition = 0) {
     }
 }
 
-int GetFileIndexById(HashTable & HashTable, int Id) {
-    ElementOfTable* Element = HashTable.Table[GetHash(HashTable, Id)];
+int GetFileIndexById(HashTable & HT, int Id) {
+    ElementOfTable* Element = HT.Table[GetHash(HT, Id)];
     while (Element != NULL) {//Пока не прошлись по всему списку
         if (!Element->IsBusy) {//Если дошли до элемента который свободен, то искомого уже не будет
             cout << "Element with input key not found\n";
@@ -111,10 +111,45 @@ void PrintElementList(ElementOfTable* Element) {
     }
 }
 
-void PrintHashTable(HashTable& HashTable) {
-    for (int i = 0; i < HashTable.Length; i++) {
+void PrintHashTable(HashTable& HT) {
+    for (int i = 0; i < HT.Length; i++) {
         cout << "HashTable [" << i << "] : ";
-        PrintElementList(HashTable.Table[i]);
+        PrintElementList(HT.Table[i]);
         cout << endl;
+    }
+}
+
+void TestHashTable() {
+    int ex_num;
+    HashTable HashTable;
+    int Key;
+    int TableLength;
+    cout << "Тестирование функций хеш-таблицы введите, что хот: \n0)Выход из программы\n1)Создание хеш-таблицы\n2)Вставка ключа в таблицу\n3)Удаление ключа из таблицы\n4)Вывести таблицу\n";
+    cin >> ex_num;
+    while (ex_num) {
+        switch (ex_num) {
+        case 1:
+            cout << "Введите размер таблицы\n";
+            cin >> TableLength;
+            HashTable.CreateTable(TableLength);
+            break;
+        case 2:
+            cout << "Введите ключ для вставки в таблицу\n";
+            cin >> Key;
+            InsertKey(HashTable, Key);
+            break;
+        case 3:
+            cout << "Введите ключ, который хотите удалить из таблицы\n";
+            cin >> Key;
+            DeleteKey(HashTable, Key);
+            break;
+        case 4:
+            PrintHashTable(HashTable);
+            break;
+        default:
+            break;
+        }
+        cout << "Тестирование функций хеш-таблицы введите, что хот: \n0)Выход из программы\n1)Создание хеш-таблицы\n2)Вставка ключа в таблицу\n3)Удаление ключа из таблицы\n4)Вывести таблицу\n";
+        cin >> ex_num;
     }
 }

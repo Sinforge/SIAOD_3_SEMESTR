@@ -23,55 +23,17 @@ int main()
 	int Key;
 	int PositionInFile;
 	cout << "Практическая работа номер 3 \"Внешние структуры данных: текстовый и двоичный файлы.\"\nПреподаватель: Филатов Александр Сергеевич\nРаботу выполнил: Власов Владислав Витальевич ИКБО-10-21\n\n";
-	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Создание хеш-таблицы\n2)Вставка ключа в таблицу\n3)Удаление ключа из таблицы\n4)Вывести таблицу\n5)Переписать файл из текстового в бинарный\n6)Вставить запись в конец файла\n7)Прочитать запись из файла и записать элемент в таблицу\n8)Удалить запись из таблицы при заданном значении ключа и соответственно из файла.\n9)Вывести данные бинарного файла\n10)Вывести данные записи используя хеш-таблицу\n";
+	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Тестирования функций хеш-таблицы\n2)Тестирование функций бинарного файла\n3)Прочитать запись из файла и добавить в хеш-таблицу\n4)Удалить запись из таблицы и файла\n5)Получить запись по ключу\n6)Создать таблицу\n7)Вывести таблицу\n8)Вывести данные бинарного файла\n";
 	cin >> ex_num;
 	while (ex_num) {
 		switch (ex_num) {
 			case 1:
-				cout << "Введите размер таблицы\n";
-				cin >> TableLength;
-				HashTable.CreateTable(TableLength);
+				TestHashTable(); // Tested - All good
 				break;
 			case 2:
-				cout << "Введите ключ для вставки в таблицу\n";
-				cin >> Key;
-				InsertKey(HashTable, Key);
+				TestBinaryFile(); // Tested - All good
 				break;
 			case 3:
-				cout << "Введите ключ, который хотите удалить из таблицы\n";
-				cin >> Key;
-				DeleteKey(HashTable, Key);
-				break;
-			case 4:
-				PrintHashTable(HashTable);
-				break;
-			case 5:
-				cout << "Enter Original file name and Binary file name\n";
-				cin >> OriginalFileName >> NewFileName;
-				fin.open(OriginalFileName, ios::in);
-				fout.open(NewFileName, ios::out | ios::binary);
-				if (!fin || !fout) {
-					cout << "file not open or not exist";
-				}
-				else {
-					OverwriteFromTextToBinary(fin, fout);
-				}
-				fin.close();
-				fout.close();
-				break;
-			case 6:
-				cout << "Enter Binary File name\n";
-				cin >> OriginalFileName;
-				fout.open(NewFileName, ios::binary | ios::app);
-				if (!fout) {
-					cout << "file not open or not exist\n";
-				}
-				cout << "Enter CarId, Car Model, OwnerDesctiption and stolen car or not(1 or 0)\n";
-				cin >> carOwner.CarId >> carOwner.CarModel >> carOwner.OwnerDescription >> carOwner.IsStolen;
-				PushBackRecord(fout, carOwner);
-				fout.close();
-				break;
-			case 7:
 				cout << "Enter Binary File name and index of record in file\n";
 				cin >> OriginalFileName >> PositionInFile;
 				fin.open(OriginalFileName, ios::binary | ios::in);
@@ -81,7 +43,7 @@ int main()
 				GetRecordAndInsertToHashTable(fin, HashTable, PositionInFile);
 				fin.close();
 				break;
-			case 8:
+			case 4:
 				cout << "Enter Binary File name and Car id to delete\n";
 				cin >> OriginalFileName >> Key;
 				f.open(OriginalFileName, ios::binary | ios::in | ios::out);
@@ -91,17 +53,7 @@ int main()
 				DeleteRecordFromFileAndTable(f, HashTable, Key, RecordCount);
 				f.close();
 				break;
-			case 9:
-				cout << "Enter Binary File name\n";
-				cin >> OriginalFileName;
-				fin.open(OriginalFileName, ios::binary | ios::in);
-				if (!fin) {
-					cout << "file not open or not exist\n";
-				}
-				PrintBinaryFileData(fin);
-				fin.close();
-				break;
-			case 10:
+			case 5:
 				cout << "Enter Binary File name and Car id to find\n";
 				cin >> OriginalFileName >> Key;
 				fin.open(OriginalFileName, ios::binary | ios::in || ios::out);
@@ -111,12 +63,30 @@ int main()
 				GetRecordFromHashTable(fin, HashTable, Key);
 				fin.close();
 				break;
+			case 6:
+				cout << "Enter length of hash table\n";
+				cin >> TableLength;
+				HashTable.CreateTable(TableLength);
+				break;
+			case 7:
+				PrintHashTable(HashTable);
+				break;
+			case 8:
+				cout << "Enter Binary FIle name\n";
+				cin >> OriginalFileName;
+				fin.open(OriginalFileName, ios::binary | ios::in);
+				if (!fin) {
+					cout << "file not open or not exist\n";
+				}
+				PrintBinaryFileData(fin);
+				fin.close();
+				break;
 			default:
 				return 0;
 				break;
 			}
-			cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Создание хеш-таблицы\n2)Вставка ключа в таблицу\n3)Удаление ключа из таблицы\n4)Вывести таблицу\n5)Переписать файл из текстового в бинарный\n6)Вставить запись в конец файла\n7)Прочитать запись из файла и записать элемент в таблицу\n8)Удалить запись из таблицы при заданном значении ключа и соответственно из файла.\n9)Вывести данные бинарного файла\n10)Вывести данные записи используя хеш-таблицу\n";
-			cin >> ex_num;
+		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Тестирования функций хеш-таблицы\n2)Тестирование функций бинарного файла\n3)Прочитать запись из файла и добавить в хеш-таблицу\n4)Удалить запись из таблицы и файла\n5)Получить запись по ключу\n6)Создать таблицу\n7)Вывести таблицу\n8)Вывести данные бинарного файла\n";
+		cin >> ex_num;
 
 		}
 

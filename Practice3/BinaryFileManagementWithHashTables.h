@@ -5,9 +5,9 @@ using namespace std;
 
 
 
-void GetRecordAndInsertToHashTable(ifstream &fin, HashTable& HashTable, int RecordPosition) {
+void GetRecordAndInsertToHashTable(ifstream &fin, HashTable& HT, int RecordPosition) {
 	CarOwner FoundedOwner = GetOwnerInfoByPosition(fin, RecordPosition);
-	if (InsertKey(HashTable, FoundedOwner.CarId, RecordPosition) == -1) {
+	if (InsertKey(HT, FoundedOwner.CarId, RecordPosition) == -1) {
 		cout << "Such record already exist in hash table\n";
 	}
 	else {

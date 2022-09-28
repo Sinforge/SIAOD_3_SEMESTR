@@ -6,6 +6,8 @@
 #pragma once
 using namespace std;
 
+
+
 struct CarOwner {
 	int CarId; //номер авто
 	char CarModel[30]; // марка автомобиля
@@ -75,6 +77,15 @@ void DeleteRecordByKey(fstream& f, int Key) {
 	}
 	CarOwner LastOwner;
 
+	//Get last record
+	f.seekg(4 * sizeof(CarOwner), ios::beg);
+	f.read((char*)&LastOwner, sizeof(CarOwner));
+	//Put in last record founded record
+	f.seekg((-1) * sizeof(CarOwner), ios::cur);
+	f.write((char*)&carOwner, sizeof(CarOwner));
+	//Put in founded record last record
+	f.seekg(Position * sizeof(CarOwner), ios::beg);
+	f.write((char*)&LastOwner, sizeof(CarOwner));
 
 }
 
@@ -100,4 +111,88 @@ CarOwner DeleteRecordByFileIndex(fstream& f, int FileIndex) {
 
 void PushBackRecord(ofstream& fout, CarOwner carOwner) {
 	fout.write((char*)&carOwner, sizeof(CarOwner));
+}
+
+void TestBinaryFile() {
+	int ex_num;
+	fstream f;
+	ifstream fin;
+	ofstream fout;
+	CarOwner carOwner;
+	string OriginalFileName, NewFileName;
+	int Key;
+	int PositionInFile;
+	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n";
+	cin >> ex_num;
+	while (ex_num) {
+		switch (ex_num) {
+		case 1:
+			cout << "Enter Original file name and Binary file name\n";
+			cin >> OriginalFileName >> NewFileName;
+			fin.open(OriginalFileName, ios::in);
+			fout.open(NewFileName, ios::out | ios::binary);
+			if (!fin || !fout) {
+				cout << "file not open or not exist";
+			}
+			else {
+				OverwriteFromTextToBinary(fin, fout);
+			}
+			fin.close();
+			fout.close();
+			break;
+		case 2:
+			cout << "Enter Binary File name\n";
+			cin >> OriginalFileName;
+			fout.open(OriginalFileName, ios::binary | ios::app);
+			if (!fout) {
+				cout << "file not open or not exist\n";
+			}
+			cout << "Enter CarId, Car Model, OwnerDesctiption and stolen car or not(1 or 0)\n";
+			cin >> carOwner.CarId;
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cin.getline(carOwner.CarModel, 30);
+			cin.getline(carOwner.OwnerDescription, 50);
+			cin >> carOwner.IsStolen;
+			PushBackRecord(fout, carOwner);
+			fout.close();
+			break;
+		case 3:
+			cout << "Enter Binary file name and key\n";
+			cin >> OriginalFileName >> Key;
+			f.open(OriginalFileName, ios::binary | ios::in | ios::out);
+			if (!f) {
+				cout << "file not open\n";
+			}
+			else { DeleteRecordByKey(f, Key); }
+			f.close();
+			break;
+		case 4:
+			cout << "Enter Binary File name\n";
+			cin >> OriginalFileName;
+			fin.open(OriginalFileName, ios::binary | ios::in);
+			if (!fin) {
+				cout << "file not open or not exist\n";
+			}
+			PrintBinaryFileData(fin);
+			fin.close();
+			break;
+		case 5:
+			cout << "Enter Binary File name and Position in file\n";
+			cin >> OriginalFileName >> PositionInFile;
+			fin.open(OriginalFileName, ios::binary | ios::in);
+			if (!fin) {
+				cout << "file not open or not exist\n";
+			}
+			print(GetOwnerInfoByPosition(fin, PositionInFile));
+			fin.close();
+			break;
+		default:
+			return;
+			break;
+		}
+		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n";
+		cin >> ex_num;
+
+	}
+
 }

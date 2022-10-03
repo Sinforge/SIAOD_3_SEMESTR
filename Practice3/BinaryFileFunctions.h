@@ -54,6 +54,7 @@ CarOwner GetOwnerInfoByPosition(ifstream& fin, int Pos) {
 	CarOwner carOwner = CarOwner();
 	fin.seekg(Pos * sizeof(CarOwner), ios::beg);//Change pointer to record with position pos
 	fin.read((char*)&carOwner, sizeof(CarOwner));
+	print(carOwner);
 	return carOwner;
 }
 
@@ -88,7 +89,7 @@ void DeleteRecordByKey(fstream& f, int Key) {
 	f.write((char*)&LastOwner, sizeof(CarOwner));
 
 }
-
+//Удаление записи из файла по индексу
 CarOwner DeleteRecordByFileIndex(fstream& f, int FileIndex) {
 	CarOwner LastOwner, carOwner;
 
@@ -97,11 +98,11 @@ CarOwner DeleteRecordByFileIndex(fstream& f, int FileIndex) {
 	f.read((char*)&carOwner, sizeof(CarOwner));
 
 	//Get last record
-	f.seekg(3 * sizeof(CarOwner), ios::beg);
+	f.seekg(4 * sizeof(CarOwner), ios::beg);
 	f.read((char*)&LastOwner, sizeof(CarOwner));
 	
 	//Put in last record founded record
-	f.seekg(3 * sizeof(CarOwner), ios::beg);
+	f.seekg(4 * sizeof(CarOwner), ios::beg);
 	f.write((char*)&carOwner, sizeof(CarOwner));
 	//Put in founded record last record
 	f.seekg(FileIndex * sizeof(CarOwner), ios::beg);
@@ -109,10 +110,12 @@ CarOwner DeleteRecordByFileIndex(fstream& f, int FileIndex) {
 	return LastOwner;
 }
 
+//Добавить запись в конец файла
 void PushBackRecord(ofstream& fout, CarOwner carOwner) {
 	fout.write((char*)&carOwner, sizeof(CarOwner));
 }
 
+//Тестирование функций бинарного файла
 void TestBinaryFile() {
 	int ex_num;
 	fstream f;
@@ -122,7 +125,7 @@ void TestBinaryFile() {
 	string OriginalFileName, NewFileName;
 	int Key;
 	int PositionInFile;
-	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n";
+	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n6)Удалить запись по индексу в файле\n";
 	cin >> ex_num;
 	while (ex_num) {
 		switch (ex_num) {
@@ -186,11 +189,21 @@ void TestBinaryFile() {
 			print(GetOwnerInfoByPosition(fin, PositionInFile));
 			fin.close();
 			break;
+		case 6:
+			cout << "Enter Binary File name and Position in file\n";
+			cin >> OriginalFileName >> PositionInFile;
+			f.open(OriginalFileName, ios::binary | ios::in | ios::out);
+			if (!f) {
+				cout << "file not open or not exist\n";
+			}
+			DeleteRecordByFileIndex(f, PositionInFile);
+			f.close();
+			break;
 		default:
 			return;
 			break;
 		}
-		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n";
+		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового в бинарный\n2)Добавить новую запись\n3)Удалить запись\n4)Вывести данные бинарного файла\n5)Вывести запись\n6)Удалить запись по индексу в файле\n";
 		cin >> ex_num;
 
 	}

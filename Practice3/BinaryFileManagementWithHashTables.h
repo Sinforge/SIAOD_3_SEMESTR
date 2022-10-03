@@ -4,7 +4,7 @@
 using namespace std;
 
 
-
+//Получение записи из файла и вставка в хеш-таблицу
 void GetRecordAndInsertToHashTable(ifstream &fin, HashTable& HT, int RecordPosition) {
 	CarOwner FoundedOwner = GetOwnerInfoByPosition(fin, RecordPosition);
 	if (InsertKey(HT, FoundedOwner.CarId, RecordPosition) == -1) {
@@ -15,7 +15,7 @@ void GetRecordAndInsertToHashTable(ifstream &fin, HashTable& HT, int RecordPosit
 	}
 }
 
-
+//Удаление записи из файла и таблицы
 void DeleteRecordFromFileAndTable(fstream& f, HashTable& HashTable, int Key, int RecordCount) {
 	
 	
@@ -34,6 +34,7 @@ void DeleteRecordFromFileAndTable(fstream& f, HashTable& HashTable, int Key, int
 
 }
 
+//Получение записи из файла, используя хеш-таблицу
 void GetRecordFromHashTable(ifstream& fin, HashTable& HashTable, int Id) {
 	int FileIndex = GetFileIndexById(HashTable, Id);
 	if (FileIndex == -1) {

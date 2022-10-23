@@ -28,7 +28,7 @@ int main()
             tree->MoreEvenNumbers();
             break;
         case 4:
-            newTree = tree->copyTree();
+            newTree = tree->CopyTree();
             break;
         case 5:
             newTree->printTree();

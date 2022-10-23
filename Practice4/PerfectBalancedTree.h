@@ -9,7 +9,6 @@ private:
     int level = 0;
     TreeNode* left, * right;
 public:
-    TreeNode() {}
 
     TreeNode(int info, int level) {
         this->info = info;
@@ -44,6 +43,7 @@ private:
     vector<int> numbers;
     TreeNode* topOfTree = new TreeNode(1, 0);
 
+    //Вставить новый узел рандомными числами
     void insertNewNodeByRandom(int countNodes, TreeNode* currentNode) {
         static int pos = 1;
         if (countNodes == 1) {
@@ -76,6 +76,7 @@ private:
             insertNewNodeByRandom(((countNodes - 2) / 2), currentNode->getRight());
         }
     }
+    //Вставить новый узел используя массив чисел
     void insertNewNodeByMassive(int countNodes, TreeNode* currentNode) {
         static int pos = 1;
         if (countNodes == 1) {
@@ -100,6 +101,7 @@ private:
             insertNewNodeByMassive(((countNodes - 2) / 2), currentNode->getRight());
         }
     }
+    //Рекурсивная функция для вывода всех узлов
     void printNode(TreeNode* currentNode) {
         if (currentNode)
         {
@@ -110,6 +112,7 @@ private:
         }
 
     }
+    //Возвращает количество четных чисел в дереве
     void getCountEvenNumbers(TreeNode* subtree, int& countEvenNumbers) {
         if (!subtree) {
             return;
@@ -121,6 +124,7 @@ private:
         getCountEvenNumbers(subtree->getLeft(), countEvenNumbers);
     }
 public:
+    //Вычисляет в каком поддереве больше четных чисел
     void MoreEvenNumbers() {
         TreeNode* left = this->topOfTree->getLeft(),
             * right = this->topOfTree->getRight();
@@ -138,10 +142,12 @@ public:
 
         }
     }
-    PerfectBalancedTree* copyTree() {
+    //Копирует данное дерево
+    PerfectBalancedTree* CopyTree() {
         return new PerfectBalancedTree(this->size, this->numbers);
 
     }
+    //Конструктор с заполнением числами массива
     PerfectBalancedTree(int nodeCount, vector<int> massive) {
         this->numbers = massive;
         this->size = nodeCount;
@@ -149,6 +155,7 @@ public:
         insertNewNodeByMassive(nodeCount - 1, this->topOfTree);
 
     }
+    //Конструктор с заполнением рандомными числами
     PerfectBalancedTree(int nodeCount) {
         this->size = nodeCount;
         int num = rand() % 20;
@@ -157,6 +164,7 @@ public:
 
         insertNewNodeByRandom(nodeCount - 1, this->topOfTree);
     }
+    //Вывод дерева
     void printTree() {
         printNode(this->topOfTree);
 

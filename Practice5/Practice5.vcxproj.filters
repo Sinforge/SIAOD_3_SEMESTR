@@ -23,5 +23,8 @@
     <ClInclude Include="FileManagament.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="BinaryTree.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

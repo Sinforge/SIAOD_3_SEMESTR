@@ -1,6 +1,7 @@
 ﻿
 #include <iostream>
 #include "FileManagament.h"
+#include "BinaryTree.h"
 int main()
 {
 	setlocale(LC_ALL, "");
@@ -8,12 +9,14 @@ int main()
 	fstream f;
 	ifstream fin;
 	ofstream fout;
+	BinaryTree * binTree = NULL;
 	CarOwner carOwner;
 	string OriginalFileName, NewFileName;
+	TreeNode* foundedNode;
 	int Key;
 	int PositionInFile;
-	cout << "Практическая работа номер 3 \"Применение хеш-таблицы для поиска данных в двоичном файле с записями фиксированной длины\"\nПреподаватель: Филатов Александр Сергеевич\nРаботу выполнил: Власов Владислав Витальевич ИКБО-10-21\n\n";
-	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Тестирования функций хеш-таблицы\n2)Тестирование функций бинарного файла\n3)Прочитать запись из файла и добавить в хеш-таблицу\n4)Удалить запись из таблицы и файла\n5)Получить запись по ключу\n6)Создать таблицу\n7)Вывести таблицу\n8)Вывести данные бинарного файла\n";
+	cout << "Практическая работа номер 5 \"Сбалансированные деревья поиска (СДП) и их применение для поиска данных в файле\"\nПреподаватель: Филатов Александр Сергеевич\nРаботу выполнил: Власов Владислав Витальевич ИКБО-10-21\n\n";
+	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n";
 	cin >> ex_num;
 	while (ex_num) {
 		switch (ex_num) {
@@ -72,11 +75,42 @@ int main()
 			}
 			fout.close();
 			break;
+		case 5:
+			cout << "Enter Binart file name to create bin tree\n";
+			cin >> OriginalFileName;
+			fin.open(OriginalFileName, ios::in | ios::binary);
+			if (!fin) {
+				cout << "file not open or not exist\n";
+			}
+			else {
+				binTree = new BinaryTree(fin);
+			}
+			fin.close();
+			break;
+		case 6:
+			cout << "Enter id and file index of new node\n";
+			cin >> Key >> PositionInFile;
+			binTree->InsertNode(Key, PositionInFile);
+			break;
+		case 7:
+			cout << "Enter id of car\n";
+			cin >> Key;
+			foundedNode = binTree->FindNodeById(Key);
+			cout << foundedNode->getCarId() << ' ' << foundedNode->getFileIndex();
+			break;
+		case 8:
+			cout << "Enter id of car to delete\n";
+			cin >> Key;
+			binTree->DeleteNodeById(Key);
+			break;
+		case 9:
+			binTree->PrintTree();
+			break;
 		default:
 			return 0;
 			break;
 		}
-		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Тестирования функций хеш-таблицы\n2)Тестирование функций бинарного файла\n3)Прочитать запись из файла и добавить в хеш-таблицу\n4)Удалить запись из таблицы и файла\n5)Получить запись по ключу\n6)Создать таблицу\n7)Вывести таблицу\n8)Вывести данные бинарного файла\n";
+		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n\n";
 		cin >> ex_num;
 
 	}

@@ -76,7 +76,7 @@ private:
             insertNewNodeByRandom(((countNodes - 2) / 2), currentNode->getRight());
         }
     }
-    //Вставить новый узел используя массив чисел
+    ////Вставить новый узел используя массив чисел
     void insertNewNodeByMassive(int countNodes, TreeNode* currentNode) {
         static int pos = 1;
         if (countNodes == 1) {

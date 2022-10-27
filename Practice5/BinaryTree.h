@@ -3,6 +3,7 @@
 #include <iostream>
 #include <istream>
 #include <vector>
+#include "FileManagament.h"
 #pragma once
 using namespace std;
 class TreeNode {
@@ -46,19 +47,6 @@ public:
     }
 };
 
-struct CarOwner {
-    int CarId; //номер авто
-    char CarModel[30]; // марка автомобиля
-    char OwnerDescription[50]; // Сведение о владельце
-    //Вывод полей структуры
-    void print() {
-        cout << "\n\nCarId: " << CarId << "\n"
-            << CarModel << "\n"
-            << OwnerDescription << "\n";
-    }
-};
-
-
 class BinaryTree {
 private:
     TreeNode* TopNode;
@@ -98,6 +86,7 @@ private:
                 TreeNode* CurrentAndPreviosNode[2];
                 CurrentAndPreviosNode[0] = currentNode;
                 CurrentAndPreviosNode[1] = previosNode;
+                return CurrentAndPreviosNode;
             }
             else if (CarId > currentNode->getCarId()) {
                 return FindNodeRec(CarId, currentNode->getRight(), currentNode);
@@ -116,7 +105,7 @@ public:
     TreeNode* getTopNode() {
         return TopNode;
     }
-    BinaryTree(ifstream fin) {
+    BinaryTree(ifstream& fin) {
     
         CarOwner carOwner;
         int counter = 0;
@@ -139,27 +128,78 @@ public:
     }
 
     void DeleteNodeById(int CarId) {
-        TreeNode** FindedNodes = FindNodeRec(CarId, TopNode, NULL);
-        if (FindedNodes[1] != NULL) {
-            if (FindedNodes[1]->getLeft() == FindedNodes[0]) {
-                FindedNodes[1]->setLeft(FindedNodes[0]->getLeft());
+        TreeNode** FoundedNodes = FindNodeRec(CarId, TopNode, NULL);
+        bool isLeft = false;
+       
+        if (FoundedNodes != NULL) {
+            if (TopNode == FoundedNodes[0]) {
+                if (TopNode->getLeft() != NULL && TopNode->getRight() == NULL) {
+                    TopNode = TopNode->getLeft();
+                }
+                else if (TopNode->getLeft() == NULL && TopNode->getRight() != NULL) {
+                    TopNode = TopNode->getRight();
+                }
+                else if (TopNode->getLeft() == NULL && TopNode->getRight() == NULL) {
+                    TopNode = NULL;
+                }
+                else {
+                    TreeNode* tempPrevNode = FoundedNodes[1];
+                    TreeNode* tempNode = TopNode->getRight();
+                    while (tempNode->getLeft() != NULL) {
+                        tempPrevNode = tempNode;
+                        tempNode = tempNode->getLeft();
+                    }
+                    tempNode->setLeft(TopNode->getLeft());
+                    TopNode = TopNode->getRight();
+                }
             }
-            TreeNode* NewReplaceNode = FindedNodes[0]->getLeft();
-            while (NewReplaceNode->getRight() != NULL) {
-                NewReplaceNode = NewReplaceNode->getRight();
+            else{
+                if (FoundedNodes[1]->getLeft() == FoundedNodes[0]) {
+                    isLeft = true;
+                }
+                if (FoundedNodes[0]->getLeft() != NULL && FoundedNodes[0]->getRight() == NULL) {
+                    if (isLeft) {
+                        FoundedNodes[1]->setLeft(FoundedNodes[0]->getLeft());
+                    }
+                    else {
+                        FoundedNodes[1]->setRight(FoundedNodes[0]->getLeft());
+                    }
+                }
+                else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() != NULL) {
+                    if (isLeft) {
+                        FoundedNodes[1]->setLeft(FoundedNodes[0]->getRight());
+                    }
+                    else {
+                        FoundedNodes[1]->setRight(FoundedNodes[0]->getRight());
+                    }
+                }
+                else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() == NULL) {
+                    if (isLeft) {
+                        FoundedNodes[1]->setLeft(NULL);
+                    }
+                    else {
+                        FoundedNodes[1]->setRight(NULL);
+                    }
+                }
+                else {
+                    TreeNode* tempPrevNode = FoundedNodes[1];
+                    TreeNode* tempNode = FoundedNodes[0];
+                    while (tempNode->getLeft() != NULL) {
+                        tempPrevNode = tempNode;
+                        tempNode = tempNode->getLeft();
+                    }
+                    tempPrevNode->setLeft(NULL);
+                    tempNode->setLeft(FoundedNodes[0]->getLeft());
+                    tempNode->setRight(FoundedNodes[0]->getRight());
+                    if (isLeft) {
+                        FoundedNodes[1]->setLeft(tempNode);
+                    }
+                    else {
+                        FoundedNodes[1]->setRight(tempNode);
+                    }
+                }
             }
-            NewReplaceNode->setRight(FindedNodes[0]->getRight());
-        }
-        else {
-            TreeNode* LeftSubTree = FindedNodes[0]->getLeft();
-            TreeNode* RightSubTree = FindedNodes[0]->getRight();
-            this->TopNode = LeftSubTree;
-            TreeNode* tempNode = LeftSubTree;
-            while (tempNode->getRight() != NULL) {
-                tempNode = tempNode->getRight();
-            }
-            tempNode->setRight(FindedNodes[0]->getRight());
-
+            
         }
     }
     void PrintTree() {

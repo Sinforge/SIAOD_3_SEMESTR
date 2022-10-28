@@ -132,73 +132,45 @@ public:
         bool isLeft = false;
        
         if (FoundedNodes != NULL) {
-            if (TopNode == FoundedNodes[0]) {
-                if (TopNode->getLeft() != NULL && TopNode->getRight() == NULL) {
-                    TopNode = TopNode->getLeft();
-                }
-                else if (TopNode->getLeft() == NULL && TopNode->getRight() != NULL) {
-                    TopNode = TopNode->getRight();
-                }
-                else if (TopNode->getLeft() == NULL && TopNode->getRight() == NULL) {
-                    TopNode = NULL;
+
+            if (FoundedNodes[1]->getLeft() == FoundedNodes[0]) {
+                isLeft = true;
+            }
+            if (FoundedNodes[0]->getLeft() != NULL && FoundedNodes[0]->getRight() == NULL) {
+                    FoundedNodes[0]->setCarId(FoundedNodes[0]->getLeft()->getCarId());
+                    FoundedNodes[0]->setLeft(FoundedNodes[0]->getLeft()->getLeft());
+                    FoundedNodes[0]->setRight(FoundedNodes[0]->getLeft()->getRight());
+            }
+            else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() != NULL) {
+                FoundedNodes[0]->setCarId(FoundedNodes[0]->getRight()->getCarId());
+                FoundedNodes[0]->setLeft(FoundedNodes[0]->getRight()->getLeft());
+                FoundedNodes[0]->setRight(FoundedNodes[0]->getRight()->getRight());
+            }
+            else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() == NULL) {
+                if (isLeft) {
+                    FoundedNodes[1]->setLeft(NULL);
                 }
                 else {
-                    TreeNode* tempPrevNode = FoundedNodes[1];
-                    TreeNode* tempNode = TopNode->getRight();
-                    while (tempNode->getLeft() != NULL) {
-                        tempPrevNode = tempNode;
-                        tempNode = tempNode->getLeft();
-                    }
-                    tempNode->setLeft(TopNode->getLeft());
-                    TopNode = TopNode->getRight();
+                    FoundedNodes[1]->setRight(NULL);
                 }
             }
-            else{
-                if (FoundedNodes[1]->getLeft() == FoundedNodes[0]) {
-                    isLeft = true;
+            else {
+                TreeNode* tempPrevNode = FoundedNodes[0];
+                TreeNode* tempNode = FoundedNodes[0]->getRight();
+                while (tempNode->getLeft() != NULL) {
+                    tempPrevNode = tempNode;
+                    tempNode = tempNode->getLeft();
                 }
-                if (FoundedNodes[0]->getLeft() != NULL && FoundedNodes[0]->getRight() == NULL) {
-                    if (isLeft) {
-                        FoundedNodes[1]->setLeft(FoundedNodes[0]->getLeft());
-                    }
-                    else {
-                        FoundedNodes[1]->setRight(FoundedNodes[0]->getLeft());
-                    }
+                if (tempNode = FoundedNodes[0]->getRight()) {
+                    FoundedNodes[0]->setCarId(tempNode->getCarId());
+                    FoundedNodes[0]->setRight(tempNode->getRight());
+                    return;
                 }
-                else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() != NULL) {
-                    if (isLeft) {
-                        FoundedNodes[1]->setLeft(FoundedNodes[0]->getRight());
-                    }
-                    else {
-                        FoundedNodes[1]->setRight(FoundedNodes[0]->getRight());
-                    }
-                }
-                else if (FoundedNodes[0]->getLeft() == NULL && FoundedNodes[0]->getRight() == NULL) {
-                    if (isLeft) {
-                        FoundedNodes[1]->setLeft(NULL);
-                    }
-                    else {
-                        FoundedNodes[1]->setRight(NULL);
-                    }
-                }
-                else {
-                    TreeNode* tempPrevNode = FoundedNodes[1];
-                    TreeNode* tempNode = FoundedNodes[0];
-                    while (tempNode->getLeft() != NULL) {
-                        tempPrevNode = tempNode;
-                        tempNode = tempNode->getLeft();
-                    }
-                    tempPrevNode->setLeft(NULL);
-                    tempNode->setLeft(FoundedNodes[0]->getLeft());
-                    tempNode->setRight(FoundedNodes[0]->getRight());
-                    if (isLeft) {
-                        FoundedNodes[1]->setLeft(tempNode);
-                    }
-                    else {
-                        FoundedNodes[1]->setRight(tempNode);
-                    }
-                }
+                tempPrevNode->setLeft(NULL);
+                FoundedNodes[0]->setCarId(tempNode->getCarId());
+
             }
+            
             
         }
     }

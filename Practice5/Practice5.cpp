@@ -2,6 +2,7 @@
 #include <iostream>
 #include "FileManagament.h"
 #include "BinaryTree.h"
+#include "RandomTree.h"
 int main()
 {
 	setlocale(LC_ALL, "");
@@ -13,10 +14,13 @@ int main()
 	CarOwner carOwner;
 	string OriginalFileName, NewFileName;
 	TreeNode* foundedNode;
+	RandomTree::TreeNode* foundNode; 
+
 	int Key;
 	int PositionInFile;
+	RandomTree * randTree = new RandomTree();
 	cout << "Практическая работа номер 5 \"Сбалансированные деревья поиска (СДП) и их применение для поиска данных в файле\"\nПреподаватель: Филатов Александр Сергеевич\nРаботу выполнил: Власов Владислав Витальевич ИКБО-10-21\n\n";
-	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n";
+	cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n10)Создать рандомизированное дерево\n11)Вставить новый элемент в рандомизированное дерево\n12)Найти элемент\n13)Вывести рандомизированное дерево\n14)Удалить элемент из рандомизированного дерева\n";
 	cin >> ex_num;
 	while (ex_num) {
 		switch (ex_num) {
@@ -106,11 +110,49 @@ int main()
 		case 9:
 			binTree->PrintTree();
 			break;
+		case 10:
+			cout << "Enter Binart file name to create random tree\n";
+			cin >> OriginalFileName;
+			fin.open(OriginalFileName, ios::in | ios::binary);
+			if (!fin) {
+				cout << "file not open or not exist\n";
+			}
+			else {
+				randTree = new RandomTree(fin);
+			}
+			fin.close();
+			break;
+		case 11:
+			cout << "Enter id and file index of new node\n";
+			cin >> Key >> PositionInFile;
+			randTree->InsertNode(randTree->TopNode,Key, PositionInFile);
+			break;
+		case 12:
+			cout << "Enter id of car\n";
+			cin >> Key;
+			foundNode = randTree->FindById(randTree->TopNode, Key);
+			cout << foundNode->CarId << ' ' << foundNode->FileIndex;
+			break;
+		case 13:
+			randTree->PrintTree();
+			break;
+		case 14:
+			cout << "Enter id of car to delete\n";
+			cin >> Key;
+			if (randTree->TopNode->CarId == Key) {
+				randTree->TopNode = randTree->Delete(randTree->TopNode, Key);
+			}
+			else {
+				randTree->Delete(randTree->TopNode, Key);
+			}
+			break;
+			
+			
 		default:
 			return 0;
 			break;
 		}
-		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n\n";
+		cout << "Введите номер задания, которое хотите протестировать: \n0)Выход из программы\n1)Переписать из текстового файла в бинарный\n2)Найти запись в файле по Id линейным поиском\n3)Найти запись по индексу\n4)Добавить новую запись в файл\n5)Построить бинарное дерево по файлу\n6)Добавить элемент в дерево\n7)Поиск элемента по ключу\n8)Удаление элемента по ключу\n9)Вывести бинарное дерево\n10)Создать рандомизированное дерево\n11)Вставить новый элемент в рандомизированное дерево\n12)Найти элемент\n13)Вывести рандомизированное дерево\n14)Удалить элемент из рандомизированного дерева\n";
 		cin >> ex_num;
 
 	}

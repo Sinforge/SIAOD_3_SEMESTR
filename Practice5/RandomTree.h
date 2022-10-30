@@ -6,7 +6,8 @@
 #include "FileManagament.h"
 #pragma once
 class RandomTree {
-	class TreeNode {
+public:
+    class TreeNode {
     public:
         int CarId = -1;
         int FileIndex = -1;
@@ -22,25 +23,7 @@ class RandomTree {
         }
 	};
     TreeNode* TopNode;
-    TreeNode* RotateRight(TreeNode* currentNode) {
-        TreeNode* right = currentNode->right;
-        currentNode->right = right->left;
-        right->left = currentNode;
-        right->countElements = currentNode->countElements;
-        currentNode->countElements = 1 + currentNode->left->GetCount() + currentNode->right->GetCount();
-        return right;
-    }
-
-  
-    TreeNode* RotateLeft(TreeNode* currentNode) {
-        TreeNode* left = currentNode->left;
-        currentNode->left = left->right;
-        left->right = currentNode;
-        left->countElements = currentNode->countElements;
-        currentNode->countElements = 1 + currentNode->left->GetCount() + currentNode->right->GetCount();
-        return left;
-    }   
-public:
+    RandomTree(){}
     RandomTree(ifstream& fin) {
         CarOwner carOwner;
         int counter = 0;
@@ -50,37 +33,118 @@ public:
          
             }
             else {
-                InsertNode(TopNode, carOwner.CarId);
+                TopNode = InsertNode(TopNode, carOwner.CarId, counter);
+                TopNode->countElements = 1 + TopNode->right->GetCount() + TopNode->left->GetCount();
             }
             counter++;
         }
     }
-    TreeNode* InsertNode(TreeNode* currentNode, int CarId) {
-        if (rand() % (currentNode->countElements + 1) == 0) {
-            return InsertNodeAsRoot(currentNode, CarId);
+
+    TreeNode* InsertNode(TreeNode* currentNode, int CarId, int FileIndex) {
+        if (!currentNode || rand() % (currentNode->countElements + 1) == 0) {
+            return InsertNodeAsRoot(currentNode, CarId, FileIndex);
         }
         if (CarId < currentNode->CarId) {
-            currentNode->left = InsertNode(currentNode->left, CarId);
+            currentNode->left = InsertNode(currentNode->left, CarId, FileIndex);
         }
         else {
-            currentNode->right = InsertNode(currentNode->right, CarId);
+            currentNode->right = InsertNode(currentNode->right, CarId, FileIndex);
         }
         currentNode->countElements++;
         return currentNode;
     }
 
-    TreeNode* InsertNodeAsRoot(TreeNode* currentNode, int CarId) {
+    TreeNode* InsertNodeAsRoot(TreeNode* currentNode, int CarId, int FileIndex) {
         if (currentNode == NULL) {
-            return new TreeNode(CarId, 0);
+            return new TreeNode(CarId, FileIndex);
         }
         if (CarId < currentNode->CarId) {
-            currentNode->left = InsertNodeAsRoot(currentNode->left, CarId);
+            currentNode->left = InsertNodeAsRoot(currentNode->left, CarId, FileIndex);
             return RotateLeft(currentNode);
         }
         else {
-            currentNode->right = InsertNodeAsRoot(currentNode->right, CarId);
+            currentNode->right = InsertNodeAsRoot(currentNode->right, CarId, FileIndex);
             return RotateRight(currentNode);
         }
 
     }
+    TreeNode* FindById(TreeNode* currentNode, int CarId) {
+        if (CarId < currentNode->CarId) {
+            return FindById(currentNode->left, CarId);
+        }
+        if (CarId > currentNode->CarId) {
+            return FindById(currentNode->right, CarId);
+        }
+        if (CarId == currentNode->CarId) {
+            return currentNode;
+        }
+        return NULL;
+    }
+    TreeNode* Merge(TreeNode* left, TreeNode* right)
+    {
+        if (!left) return right;
+        if (!right) return left;
+        if (rand() % (left->countElements + right->countElements) < left->countElements) {
+            left->right = Merge(left->right, right);
+            left->countElements = left->right->GetCount() + 1 + left->left->GetCount();
+            return left;
+        }
+        else {
+            right->left = Merge(left, right->left);
+            right->countElements = 1 + right->left->GetCount() + right->right->GetCount();
+            return right;
+        }
+        return 0;
+    }
+
+
+    TreeNode* Delete(TreeNode* currentNode, int CarId)
+    {
+        if (!currentNode) return 0;
+        if (CarId < currentNode->CarId) currentNode->left = Delete(currentNode->left, CarId);
+        else if (CarId > currentNode->CarId) currentNode->right = Delete(currentNode->right, CarId);
+        else {
+            TreeNode* NodeForDelete = currentNode;
+            currentNode = Merge(currentNode->left, currentNode->right);
+            delete NodeForDelete;
+            if (!currentNode) return currentNode;
+        }
+        currentNode->countElements = 1 + currentNode->left->GetCount() + currentNode->right->GetCount();
+
+        return currentNode;
+    }
+    void PrintTree() {
+        printNode(TopNode, 0);
+    }
+    private:
+
+        //Рекурсивная функция для вывода всех узлов
+        void printNode(TreeNode* currentNode, int level) {
+            if (currentNode)
+            {
+                printNode(currentNode->right, level + 1);
+                for (int i = 0; i < level; i++) cout << "-----";
+                cout << currentNode->CarId << endl;
+                printNode(currentNode->left, level + 1);
+            }
+
+        }
+        TreeNode* RotateRight(TreeNode* currentNode) {
+            TreeNode* right = currentNode->right;
+            currentNode->right = right->left;
+            right->left = currentNode;
+            right->countElements = currentNode->countElements;
+            currentNode->countElements = 1 + currentNode->left->GetCount() + currentNode->right->GetCount();
+            return right;
+        }
+
+
+        TreeNode* RotateLeft(TreeNode* currentNode) {
+            TreeNode* left = currentNode->left;
+            currentNode->left = left->right;
+            left->right = currentNode;
+            left->countElements = currentNode->countElements;
+            currentNode->countElements = 1 + currentNode->left->GetCount() + currentNode->right->GetCount();
+            return left;
+        }
 };

@@ -161,7 +161,7 @@ public:
                     tempPrevNode = tempNode;
                     tempNode = tempNode->getLeft();
                 }
-                if (tempNode = FoundedNodes[0]->getRight()) {
+                if (tempNode == FoundedNodes[0]->getRight()) {
                     FoundedNodes[0]->setCarId(tempNode->getCarId());
                     FoundedNodes[0]->setRight(tempNode->getRight());
                     return;

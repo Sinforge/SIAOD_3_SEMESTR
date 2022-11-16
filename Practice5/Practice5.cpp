@@ -66,11 +66,12 @@ int main()
 			cout << "Enter Binary file name\n";
 			cin >> OriginalFileName;
 			carOwner = CarOwner();
-			cout << "Enter Car Model, Car Owner Desc, Car id\n";
+			cout << "Enter  Car Model, Car Owner Desc,Car id\n";
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			cin.getline(carOwner.CarModel, 30);
 			cin.getline(carOwner.OwnerDescription, 50);
 			cin >> carOwner.CarId;
-			fout.open(OriginalFileName, ios::out | ios::binary);
+			fout.open(OriginalFileName, ios::app | ios::binary);
 			if (!fout) {
 				cout << "file not open or not exist\n";
 			}	
@@ -100,7 +101,7 @@ int main()
 			cout << "Enter id of car\n";
 			cin >> Key;
 			foundedNode = binTree->FindNodeById(Key);
-			cout << foundedNode->getCarId() << ' ' << foundedNode->getFileIndex();
+			cout << foundedNode->getCarId() << ' ' << foundedNode->getFileIndex() << endl;
 			break;
 		case 8:
 			cout << "Enter id of car to delete\n";
@@ -125,7 +126,9 @@ int main()
 		case 11:
 			cout << "Enter id and file index of new node\n";
 			cin >> Key >> PositionInFile;
-			randTree->InsertNode(randTree->TopNode,Key, PositionInFile);
+			randTree->InsertNode(randTree->TopNode, Key, PositionInFile);
+	
+
 			break;
 		case 12:
 			cout << "Enter id of car\n";

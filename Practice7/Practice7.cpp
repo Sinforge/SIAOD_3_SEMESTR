@@ -7,7 +7,10 @@
 using namespace std;
 int main()
 {
+    setlocale(LC_ALL, "");
     cout << compress("abbccaa") << endl;
-    cout << LZ77("0100001000000100001", 1);
+    for (auto code : LZ77("КРАСНАЯ КРАСКА")) {
+        cout << "(" << get<0>(code) << ", " << get<1>(code) << ", " << get<2>(code)<< ")" << endl;
+    }
 
 }

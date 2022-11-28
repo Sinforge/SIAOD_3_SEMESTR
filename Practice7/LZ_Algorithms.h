@@ -131,7 +131,7 @@ vector<pair<int, char>> LZ78(string input) {
 		currentStr += input[currentIndex];
 
 
-		while (currentIndex < input.size() && findString(currentStr, dictionary) != -1) {
+			while (currentIndex < input.size() && findString(currentStr, dictionary) != -1) {
 			dictionaryIndex = findString(currentStr, dictionary);
 			currentIndex++;
 			currentStr += input[currentIndex];

@@ -23,7 +23,10 @@
     <ClInclude Include="RLE.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="LZ77.h">
+    <ClInclude Include="LZ_Algorithms.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShenonFanoAlg.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

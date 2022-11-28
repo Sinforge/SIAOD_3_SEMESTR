@@ -3,9 +3,10 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <utility>
 using namespace std;
 
-class Dictinary {
+class Dictionary {
 private:
 	string Data = "________";
 public:
@@ -24,7 +25,7 @@ vector<tuple<int, int, char>> LZ77(string input)
 {
 	vector<tuple<int, int, char>> codes = vector<tuple<int, int, char>>();
 
-	Dictinary dict = Dictinary();
+	Dictionary dict = Dictionary();
 	dict.addData(input[0]);
 	codes.push_back(tuple<int, int, char> {0, 0, input[0]});
 	string buffer = input.substr(1, 5);
@@ -105,3 +106,41 @@ vector<tuple<int, int, char>> LZ77(string input)
 	return codes;
 	
 }
+int findString(string str, vector<string> dictionary) {
+	int index = -1;
+	for (int i = 0; i < dictionary.size(); i++) {
+		if (dictionary.at(i) == str) {
+			return i + 1;
+		}
+	}
+	return index;
+}
+vector<pair<int, char>> LZ78(string input) {
+	int currentIndex = 1;
+	string oneChar = "";
+	oneChar += input[0];
+	vector<string> dictionary = vector<string>();
+	vector<pair<int, char>> codes = vector<pair<int, char>>();
+	codes.push_back(pair<int, char> {0, input[0]});
+	dictionary.push_back(oneChar);
+	string currentStr;
+	int dictionaryIndex;
+	while (currentIndex < input.size()) {
+		int dictionaryIndex = 0;
+		currentStr = "";
+		currentStr += input[currentIndex];
+
+
+		while (currentIndex < input.size() && findString(currentStr, dictionary) != -1) {
+			dictionaryIndex = findString(currentStr, dictionary);
+			currentIndex++;
+			currentStr += input[currentIndex];
+		}
+
+
+		codes.push_back(pair<int, char> {dictionaryIndex, currentStr.back()});
+		dictionary.push_back(currentStr);
+		currentIndex++;
+	}
+	return codes;
+} 

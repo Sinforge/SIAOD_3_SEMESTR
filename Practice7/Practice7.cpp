@@ -9,7 +9,7 @@ int main()
 {
     setlocale(LC_ALL, "");
     cout << compress("abbccaa") << endl;
-    for (auto code : LZ77("КРАСНАЯ КРАСКА")) {
+    for (auto code : LZ77("0100001000000100001")) {
         cout << "(" << get<0>(code) << ", " << get<1>(code) << ", " << get<2>(code)<< ")" << endl;
     }
 

@@ -49,26 +49,45 @@ vector<tuple<int, int, char>> LZ77(string input)
 					}
 					else {
 						if (currentLength >= maxLength) {
+							
 							maxLength = currentLength;
 							maxLengthIndex = start;
 							maxLengthChar = buffer[i];
+							if (currentLength == 5) {
+								maxLengthChar = input[bufferEnd];
+								bufferEnd++;
+							}
+							currentLength = 0;
 							break;
 						}
 						currentLength = 0;
 					}
 					i++;
 				}
-				if (currentLength >= maxLength) {
-					maxLength = currentLength;
-					maxLengthIndex = start;
-					maxLengthChar = i<buffer.size() ? buffer[i] : buffer[0];
+				if (currentLength != 0) {
+					if (currentLength >= maxLength) {
+						maxLength = currentLength;
+						maxLengthIndex = start;
+						maxLengthChar = buffer[i];
+						currentLength = 0;
+					}
 					break;
 				}
 			}
 			codes.push_back(tuple<int, int, char> {maxLengthIndex, maxLength, maxLengthChar});
 			if (bufferEnd <= input.size()) {
-				dict.addData(buffer.substr(0, maxLength + 1));
-				buffer = buffer.substr(maxLength + 1) + input.substr(bufferEnd, maxLength + 1);
+				if (maxLength == 5) {
+					dict.addData(buffer + maxLengthChar);
+				}
+				else {
+					dict.addData(buffer.substr(0, maxLength + 1));
+				}
+				if (input.size() - bufferEnd < 5) {
+					buffer = buffer.substr(maxLength+1 > 5?5:maxLength+1) + input.substr(bufferEnd, input.size() - bufferEnd);
+				}
+				else {
+					buffer = buffer.substr(maxLength + 1) + input.substr(bufferEnd, maxLength + 1);
+				}
 				bufferEnd += maxLength + 1;
 			}
 			else {

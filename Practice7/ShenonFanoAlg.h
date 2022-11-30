@@ -87,6 +87,7 @@ int findPair(vector<pair<char, string>> pairs, char symbol) {
     }
     return -1;
 }
+
 string ShenonFanoAlgorithm(string str) {
     vector<pair<int, char>> charsInfo = vector<pair<int, char>>();
     //Determinate all symbols

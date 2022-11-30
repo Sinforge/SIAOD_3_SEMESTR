@@ -19,7 +19,7 @@ struct Node
     
     char symbol = '-';
     int frequence;
-    Node* left, * right;
+    Node* left = NULL, * right = NULL;
     bool operator < (const Node& AnotherNode) {
         return (frequence < AnotherNode.frequence);
     }
@@ -32,10 +32,13 @@ struct Node
     }
 };
 void printHuffmanTree(Node* node, int level = 0) {
-    if (!node) {
+    if (node == NULL) {
         return;
     }
     printHuffmanTree(node->right, level + 1);
+    for (int i = 0; i < level; i++) {
+        cout << "\t";
+    }
     cout << node->symbol << endl;
     printHuffmanTree(node->left, level + 1);
 }
@@ -71,14 +74,35 @@ Node* buildHuffmanTree(vector<pair<int, char>> charsInfo) {
     return queueOfNodes.front();
 }
 void encode(Node* node, string currentCode, map<char, string>& huffmanCodes) {
-    if (!node) {
+    if (node == NULL) {
         return;
     }
-    if (!node->left && !node->right) {
+    if (node->left == NULL && node->right == NULL) {
         huffmanCodes[node->symbol] = currentCode;
+
     }
     encode(node->left, currentCode + "0", huffmanCodes);
     encode(node->right, currentCode + "1", huffmanCodes);
+}
+
+void decode(string compressedString, Node* huffmanTree, int&currentIndex, string& decodedString) {
+    if (huffmanTree == NULL) {
+        return;
+    }
+
+ 
+    if (!huffmanTree->left && !huffmanTree->right)
+    {
+        decodedString += huffmanTree->symbol;
+        return;
+    }
+
+    currentIndex++;
+
+    if (compressedString[currentIndex] == '0')
+        decode(compressedString,huffmanTree->left, currentIndex, decodedString);
+    else
+        decode(compressedString, huffmanTree->right, currentIndex, decodedString);
 }
 
 void  HuffmanCompress(string str) {
@@ -111,5 +135,15 @@ void  HuffmanCompress(string str) {
     }
     cout << compressedString << endl;
 
+    string result = "";
+    int index = -1;
+
+    //need to cast to int, cause size returns size_t type
+    while (index < (int)compressedString.size() - 2) {
+        decode(compressedString, huffmanTree, index, result);
+    }
+    cout << "\n" << result;
+
 }
+
 

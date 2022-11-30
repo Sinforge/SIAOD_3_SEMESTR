@@ -29,5 +29,8 @@
     <ClInclude Include="ShenonFanoAlg.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="HuffmanAlgo.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

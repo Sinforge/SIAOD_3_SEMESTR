@@ -1,6 +1,7 @@
 ﻿#include "RLE.h"
 #include "LZ_Algorithms.h"
 #include "ShenonFanoAlg.h"
+#include "HuffmanAlgo.h"
 using namespace std;
 
 int main()
@@ -17,5 +18,8 @@ int main()
     }
     cout << "\nShenonFanoAlgorithm\n";
     cout << ShenonFanoAlgorithm("Кони-кони, коникони, Мы сидели на балконе, Чай пили, воду пили, По-турецки говорили.");
+
+    cout << "\n\n\n";
+    HuffmanCompress("ВласовВладиславВитальевич");
     
 }

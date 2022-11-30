@@ -130,6 +130,7 @@
     <ClCompile Include="Practice7.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HuffmanAlgo.h" />
     <ClInclude Include="LZ_Algorithms.h" />
     <ClInclude Include="RLE.h" />
     <ClInclude Include="ShenonFanoAlg.h" />

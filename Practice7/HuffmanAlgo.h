@@ -1,0 +1,115 @@
+#pragma once
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <map>
+using namespace std;
+
+int findPair1(vector<pair<int, char>> pairs, char c) {
+    for (int i = 0; i < pairs.size(); i++) {
+        if (pairs[i].second == c) {
+            return i;
+        }
+    }
+    return -1;
+}
+struct Node
+{
+    
+    char symbol = '-';
+    int frequence;
+    Node* left, * right;
+    bool operator < (const Node& AnotherNode) {
+        return (frequence < AnotherNode.frequence);
+    }
+    Node(char symbol, int frequence) {
+        this->frequence = frequence;
+        this->symbol = symbol;
+    }
+    Node() {
+
+    }
+};
+void printHuffmanTree(Node* node, int level = 0) {
+    if (!node) {
+        return;
+    }
+    printHuffmanTree(node->right, level + 1);
+    cout << node->symbol << endl;
+    printHuffmanTree(node->left, level + 1);
+}
+
+Node* buildHuffmanTree(vector<pair<int, char>> charsInfo) {
+    sort(charsInfo.begin(), charsInfo.end());
+    queue<Node*> queueOfNodes = queue<Node*>();
+    for (auto c : charsInfo) {
+        queueOfNodes.push(new Node(c.second, c.first));
+    }
+    Node* mergedNode;
+    Node* node1;
+    Node* node2;
+    while (queueOfNodes.size() != 1) {
+        mergedNode = new Node();
+
+        //take node and delete from queue
+        node1 = queueOfNodes.front();
+        queueOfNodes.pop();
+
+        //take node and delete from queue
+        node2 = queueOfNodes.front();
+        queueOfNodes.pop();
+
+        //fill merged node
+        mergedNode->left = node1;
+        mergedNode->right = node2;
+        mergedNode->frequence = node1->frequence + node2->frequence;
+
+        //push new node
+        queueOfNodes.push(mergedNode);
+    }
+    return queueOfNodes.front();
+}
+void encode(Node* node, string currentCode, map<char, string>& huffmanCodes) {
+    if (!node) {
+        return;
+    }
+    if (!node->left && !node->right) {
+        huffmanCodes[node->symbol] = currentCode;
+    }
+    encode(node->left, currentCode + "0", huffmanCodes);
+    encode(node->right, currentCode + "1", huffmanCodes);
+}
+
+void  HuffmanCompress(string str) {
+    vector<pair<int, char>> charsInfo = vector<pair<int, char>>();
+    //Determinate all symbols
+    for (char c : str) {
+        int index = findPair1(charsInfo, c);
+        if (index == -1) {
+            charsInfo.push_back(pair<int, char> {1, c});
+        }
+        else {
+            charsInfo.at(index).first++;
+        }
+    }
+    
+    Node* huffmanTree = buildHuffmanTree(charsInfo);
+    map<char, string> codes = map<char, string>();
+    encode(huffmanTree, "", codes);
+    cout << endl;
+    printHuffmanTree(huffmanTree);
+
+    cout << "\nCodes of Huffman\n";
+    for (auto code : codes) {
+        cout << code.first << ' ' << code.second << endl;
+    }
+
+    string compressedString = "";
+    for (int i = 0; i < str.size(); i++) {
+        compressedString += codes[str[i]];
+    }
+    cout << compressedString << endl;
+
+}
+

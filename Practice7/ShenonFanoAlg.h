@@ -45,16 +45,30 @@ pair<vector<pair<int,char>>, vector<pair<int, char>>> GetArrays(vector<pair<int,
 
 }
 static vector<pair<char, string>> result;
-void getCodes(vector<pair<int, char>> arrayInput, string nodeCode="") {
+void getCodes(vector<pair<int, char>> arrayInput, string nodeCode="", int level = 1) {
 
     if (arrayInput.size() == 1) {
         result.push_back(pair<char, string> {arrayInput[0].second, nodeCode});
+        for (int i = 0; i < level; i++) {
+            cout << "\t";
+        }
+        cout << arrayInput[0].second << endl;
+        
     }
     else if (arrayInput.size() != 0) {
         pair<vector<pair<int, char>>, vector<pair<int, char>>> pair = GetArrays(arrayInput);
-        getCodes(pair.first, nodeCode + '0');
-        getCodes(pair.second, nodeCode + '1');
+        getCodes(pair.second, nodeCode + '1', level + 1);
+        for (int i = 0; i < level; i++) {
+            cout << "\t";
+        }
+        for (int i = 0; i < arrayInput.size(); i++) {
+            cout << arrayInput[i].second;
+        }
+        cout << endl;
+      
+        getCodes(pair.first, nodeCode + '0', level+1);
     }
+    
 }
 
 int findPair(vector<pair<int, char>> pairs, char symbol) {

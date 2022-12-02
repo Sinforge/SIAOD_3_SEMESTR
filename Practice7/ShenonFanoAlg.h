@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <vector>
+#include <map>
 #include <algorithm>
 using namespace std;
 
@@ -44,33 +45,64 @@ pair<vector<pair<int,char>>, vector<pair<int, char>>> GetArrays(vector<pair<int,
 
 
 }
-static vector<pair<char, string>> result;
-void getCodes(vector<pair<int, char>> arrayInput, string nodeCode="", int level = 1) {
 
-    if (arrayInput.size() == 1) {
-        result.push_back(pair<char, string> {arrayInput[0].second, nodeCode});
-        for (int i = 0; i < level; i++) {
-            cout << "\t";
-        }
-        cout << arrayInput[0].second << endl;
-        
+struct ShenonFanoNode {
+    ShenonFanoNode() {
+
     }
-    else if (arrayInput.size() != 0) {
-        pair<vector<pair<int, char>>, vector<pair<int, char>>> pair = GetArrays(arrayInput);
-        getCodes(pair.second, nodeCode + '1', level + 1);
-        for (int i = 0; i < level; i++) {
-            cout << "\t";
-        }
-        for (int i = 0; i < arrayInput.size(); i++) {
-            cout << arrayInput[i].second;
-        }
-        cout << endl;
-      
-        getCodes(pair.first, nodeCode + '0', level+1);
+    vector<pair<int, char>> codes;
+    ShenonFanoNode * left, * rigth;
+
+};
+void buildShenonFanoTree(ShenonFanoNode * currentNode) {
+
+    if (currentNode->codes.size() == 1) {
+        return;
     }
-    
+
+    else{
+        pair<vector<pair<int, char>>, vector<pair<int, char>>> pair = GetArrays(currentNode->codes);
+        ShenonFanoNode* left = new ShenonFanoNode();
+        ShenonFanoNode* right = new ShenonFanoNode();
+        left->codes = pair.first;
+        right->codes = pair.second;
+        currentNode->left = left;
+        currentNode->rigth = right;
+
+        buildShenonFanoTree(left);
+        buildShenonFanoTree(right);
+    }
 }
 
+void encode(ShenonFanoNode* currentNode, map<char, string> & codes, string currentCode = "") {
+    if (currentNode->codes.size() == 1) {
+        codes[currentNode->codes[0].second] = currentCode;
+        return;
+    }
+    else {
+        encode(currentNode->left, codes, currentCode + "0");
+        encode(currentNode->rigth, codes, currentCode + "1");
+    }
+}
+void printTree(ShenonFanoNode* Tree, int level = 0) {
+    if (Tree->codes.size() == 1)
+    {
+        for (int i = 0; i < level; i++) {
+            cout << "\t";
+        }
+        cout << Tree->codes[0].second << endl;
+        return;
+    }
+    printTree(Tree->rigth, level + 1);
+    for (int i = 0; i < level; i++) {
+        cout << "\t";
+    }
+    for (auto ch : Tree->codes) {
+        cout << ch.second;
+    }
+    cout << endl;
+    printTree(Tree->left, level + 1);
+}
 int findPair(vector<pair<int, char>> pairs, char symbol) {
     for (int i = 0; i < pairs.size(); i++) {
         if (pairs[i].second == symbol) {
@@ -88,7 +120,28 @@ int findPair(vector<pair<char, string>> pairs, char symbol) {
     return -1;
 }
 
-string ShenonFanoAlgorithm(string str) {
+void decode(string encodedString,int & currentId, string& decodedString, ShenonFanoNode * currentNode, ShenonFanoNode * Tree) {
+    currentId++;
+    if (currentId >= encodedString.size()) {
+        return;
+    }
+    if (currentNode->codes.size() == 1) {
+        decodedString += currentNode->codes[0].second;
+        currentId --;
+        decode(encodedString, currentId, decodedString, Tree, Tree);
+    }
+    else {
+        char currentChar = encodedString[currentId];
+        if (currentChar == '0') {
+            decode(encodedString, currentId, decodedString, currentNode->left, Tree);
+        }
+        else {
+            decode(encodedString, currentId, decodedString, currentNode->rigth, Tree);
+        }
+    }
+
+}
+void ShenonFanoAlgorithm(string str) {
     vector<pair<int, char>> charsInfo = vector<pair<int, char>>();
     //Determinate all symbols
     for (char c : str) {
@@ -100,11 +153,40 @@ string ShenonFanoAlgorithm(string str) {
             charsInfo.at(index).first++;
         }
     }
-    getCodes(charsInfo);
-    string compressedString = "";
-    for (int i = 0; i < str.size(); i++) {
-        compressedString += result.at(findPair(result, str[i])).second;
+    cout << "Chars Info:\n";
+    for (auto info : charsInfo) {
+        cout << info.first << " " << info.second << endl;
     }
-    return compressedString;
+
+    //Make tree
+    ShenonFanoNode* Tree = new ShenonFanoNode();
+    Tree->codes = charsInfo;
+    buildShenonFanoTree(Tree);
+
+    //Print tree
+    printTree(Tree);
+    cout << endl;
+
+    //Gets codes for our characters and print them
+    map<char, string> Codes = map<char, string>();
+    encode(Tree, Codes);
+    for (pair<char, string> code: Codes) {
+        cout << code.first << " " << code.second << endl;
+    }
+
+    //Encode string
+    string encodedString = "";
+    for (char ch : str) {
+        encodedString += Codes[ch];
+    }
+    cout << "\n" << encodedString << endl;
+
+
+    //Decode string
+    string decodedString = "";
+    int currentId = -1;
+    decode(encodedString, currentId, decodedString, Tree, Tree);
+    cout << decodedString;
+
 }
 

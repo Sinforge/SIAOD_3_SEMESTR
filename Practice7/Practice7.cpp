@@ -17,7 +17,7 @@ int main()
         cout << "(" << code.first << ", " << code.second << ")\n";
     }
     cout << "\nShenonFanoAlgorithm\n";
-    cout << ShenonFanoAlgorithm("Кони-кони, коникони, Мы сидели на балконе, Чай пили, воду пили, По-турецки говорили.");
+    ShenonFanoAlgorithm("Кони-кони, кони-кони, Мы сидели на балконе, Чай пили, воду пили, По-турецки говорили.");
 
     cout << "\n\n\n";
     HuffmanCompress("ВласовВладиславВитальевич");

@@ -153,10 +153,6 @@ void ShenonFanoAlgorithm(string str) {
             charsInfo.at(index).first++;
         }
     }
-    cout << "Chars Info:\n";
-    for (auto info : charsInfo) {
-        cout << info.first << " " << info.second << endl;
-    }
 
     //Make tree
     ShenonFanoNode* Tree = new ShenonFanoNode();
@@ -164,12 +160,14 @@ void ShenonFanoAlgorithm(string str) {
     buildShenonFanoTree(Tree);
 
     //Print tree
+    cout << "Prefix tree:" << endl;
     printTree(Tree);
     cout << endl;
 
     //Gets codes for our characters and print them
     map<char, string> Codes = map<char, string>();
     encode(Tree, Codes);
+    cout << "Codes for characters" << endl;
     for (pair<char, string> code: Codes) {
         cout << code.first << " " << code.second << endl;
     }
@@ -179,14 +177,16 @@ void ShenonFanoAlgorithm(string str) {
     for (char ch : str) {
         encodedString += Codes[ch];
     }
-    cout << "\n" << encodedString << endl;
+    cout << "\n" << "Compressed string: " <<  encodedString << endl;
 
 
     //Decode string
     string decodedString = "";
     int currentId = -1;
     decode(encodedString, currentId, decodedString, Tree, Tree);
-    cout << decodedString;
+    cout << "Decoded string: " << decodedString;
+
+    cout << "Коэффициент сжатия: " << (float)encodedString.size() / (float)str.size() * 8;
 
 }
 

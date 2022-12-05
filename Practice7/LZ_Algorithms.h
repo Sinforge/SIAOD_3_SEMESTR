@@ -21,7 +21,7 @@ public:
 	}
 };
 
-vector<tuple<int, int, char>> LZ77(string input)
+pair<string, float> LZ77(string input)
 {
 	vector<tuple<int, int, char>> codes = vector<tuple<int, int, char>>();
 
@@ -103,7 +103,14 @@ vector<tuple<int, int, char>> LZ77(string input)
 			bufferEnd += 1;
 		}
 	}
-	return codes;
+	//Fill result : compression koeff and new string
+	string compressedString = "";
+	for (auto code: codes) {
+		compressedString += '<' + to_string(get<0>(code)) + ',' + to_string(get<1>(code))
+			+ ',' + to_string(get<2>(code)) + ">";
+
+	}
+	return pair<string, float> {compressedString, (float)input.length() / (float)compressedString.length()};
 	
 }
 int findString(string str, vector<string> dictionary) {
@@ -114,8 +121,9 @@ int findString(string str, vector<string> dictionary) {
 		}
 	}
 	return index;
-}
-vector<pair<int, char>> LZ78(string input) {
+
+
+}pair<string, float> LZ78(string input) {
 	int currentIndex = 1;
 	string oneChar = "";
 	oneChar += input[0];
@@ -142,5 +150,13 @@ vector<pair<int, char>> LZ78(string input) {
 		dictionary.push_back(currentStr);
 		currentIndex++;
 	}
-	return codes;
+	//Fill result : compression koeff and new string
+	string compressedString = "";
+	for (auto code : codes) {
+		compressedString += '<' + to_string(get<0>(code)) + ',' + to_string(get<1>(code)) + ">";
+
+	}
+	return pair<string, float> {compressedString, (float)input.length() / (float)compressedString.length()};
+
+
 } 

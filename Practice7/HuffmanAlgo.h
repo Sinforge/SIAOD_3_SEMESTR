@@ -118,10 +118,18 @@ void  HuffmanCompress(string str) {
         }
     }
     
+
+    //Build HuffmanTree
     Node* huffmanTree = buildHuffmanTree(charsInfo);
+    
+    
+    //Get codes of characters
     map<char, string> codes = map<char, string>();
     encode(huffmanTree, "", codes);
-    cout << endl;
+
+
+    //Print Huffman Tree
+    cout << "Huffman Tre" << endl;
     printHuffmanTree(huffmanTree);
 
     cout << "\nCodes of Huffman\n";
@@ -129,6 +137,9 @@ void  HuffmanCompress(string str) {
         cout << code.first << ' ' << code.second << endl;
     }
 
+
+    //Get encoded string
+    cout << "Encoced string: ";
     string compressedString = "";
     for (int i = 0; i < str.size(); i++) {
         compressedString += codes[str[i]];
@@ -138,11 +149,17 @@ void  HuffmanCompress(string str) {
     string result = "";
     int index = -1;
 
+
+    //Decoding
     //need to cast to int, cause size returns size_t type
+    cout << "Decoded string: ";
     while (index < (int)compressedString.size() - 2) {
         decode(compressedString, huffmanTree, index, result);
     }
     cout << "\n" << result;
+
+
+    cout << "Коэффициент сжатия: " << (float)compressedString.size() / ((float)str.size() * 8);
 
 }
 

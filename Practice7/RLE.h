@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 
-string compress(string str) {
+pair<string, float> compress(string str) {
 	string result = "";
 	int counter = 1;
 	for (int i = 1; i < str.length(); i++) {
@@ -20,6 +20,5 @@ string compress(string str) {
 	else {
 		result = result + str[str.length() - 1] + to_string(counter);
 	}
-	cout << (float)str.length() / (float) result.length() << endl;
-	return result;
+	return pair<string, float> {result, (float)str.length() / (float)result.length()};
 }

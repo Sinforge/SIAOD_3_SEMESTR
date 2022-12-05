@@ -7,18 +7,37 @@ using namespace std;
 int main()
 {
     setlocale(LC_ALL, "");
-    cout << compress("abbccaa") << endl;
+    //RLE TEST 1
+    cout << "Тест 1 (RLE длинная строка из повторяющихся символов)" << endl;
+    pair<string, float> test1 = compress("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbccccccccccccccccccccccccccccccccccccccceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    cout << "Коэффициент сжатия: " << test1.second << endl
+        << "Сжатая строка: " << test1.first << endl << endl << endl ;
+    
+    //RLE TEST 2
+    cout << "Тест 2 (RLE длинная строка из неповторяющихся символов)\n";
+    pair<string, float> test2 = compress("abcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcde");
+    cout << "Коэффициент сжатия: " << test2.second << endl
+        << "Сжатая строка: " << test2.first << endl << endl << endl;
+
+    //LZ77
     cout << "\nLZ77\n";
-    for (auto code : LZ77("0100001000000100001")) {
-        cout << "(" << get<0>(code) << ", " << get<1>(code) << ", " << get<2>(code)<< ")" << endl;
-    }
+    pair<string, float> test3 = LZ77("0100001000000100001");
+    cout << "Коэффициент сжатия: " << test3.second << endl
+        << "Сжатая строка: " << test3.first << endl << endl << endl;
+
+
+    //LZ78
     cout << "\nLZ78\n";
-    for (auto code : LZ78("пропронепронепрнепрона")) {
-        cout << "(" << code.first << ", " << code.second << ")\n";
-    }
+    pair<string, float> test4 = LZ78("пропронепронепрнепрона");
+    cout << "Коэффициент сжатия: " << test4.second << endl
+        << "Сжатая строка: " << test4.first << endl << endl << endl;
+
+
+    //ShenonFano
     cout << "\nShenonFanoAlgorithm\n";
     ShenonFanoAlgorithm("Кони-кони, кони-кони, Мы сидели на балконе, Чай пили, воду пили, По-турецки говорили.");
 
+    //Huffman
     cout << "\n\n\n";
     HuffmanCompress("ВласовВладиславВитальевич");
     

@@ -1,7 +1,10 @@
 ﻿#include "RLE.h"
+#include <fstream>
+#include <sstream>
 #include "LZ_Algorithms.h"
 #include "ShenonFanoAlg.h"
 #include "HuffmanAlgo.h"
+#include <algorithm>
 using namespace std;
 
 int main()
@@ -41,4 +44,16 @@ int main()
     cout << "\n\n\n";
     HuffmanCompress("ВласовВладиславВитальевич");
     
+
+
+    //Test Huffman on large file
+    ifstream file("Test.txt", ios::in);
+    string fileLine = "";
+    string allText = "";
+    while (file) {
+        getline(file, fileLine);
+        allText += fileLine;
+    }
+    string compString = HuffmanCompressTest(allText);
+    cout << endl <<  (float)compString.size() / ((float)allText.size() * 8.0);
 }

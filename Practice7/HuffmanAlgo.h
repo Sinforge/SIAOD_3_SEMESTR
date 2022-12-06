@@ -161,6 +161,43 @@ void  HuffmanCompress(string str) {
 
     cout << "Коэффициент сжатия: " << (float)compressedString.size() / ((float)str.size() * 8);
 
+    
+
 }
+string  HuffmanCompressTest(string str) {
+    vector<pair<int, char>> charsInfo = vector<pair<int, char>>();
+    //Determinate all symbols
+    for (char c : str) {
+        int index = findPair1(charsInfo, c);
+        if (index == -1) {
+            charsInfo.push_back(pair<int, char> {1, c});
+        }
+        else {
+            charsInfo.at(index).first++;
+        }
+    }
+
+
+    //Build HuffmanTree
+    Node* huffmanTree = buildHuffmanTree(charsInfo);
+
+
+    //Get codes of characters
+    map<char, string> codes = map<char, string>();
+    encode(huffmanTree, "", codes);
+
+
+
+    string compressedString = "";
+    for (int i = 0; i < str.size(); i++) {
+        compressedString += codes[str[i]];
+    }
+
+    return compressedString;
+
+
+}
+
+
 
 

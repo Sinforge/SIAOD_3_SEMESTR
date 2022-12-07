@@ -131,13 +131,21 @@ void  HuffmanCompress(string str) {
     //Print Huffman Tree
     cout << "Huffman Tre" << endl;
     printHuffmanTree(huffmanTree);
-
+    
+    float disp = 0;
+    float averageLength = 0;
     cout << "\nCodes of Huffman\n";
     for (auto code : codes) {
         cout << code.first << ' ' << code.second << endl;
+        averageLength += code.second.size() * (float)charsInfo[findPair1(charsInfo, code.first)].first / (float)str.size();
     }
+    cout << "\nAverage length: " << averageLength;
+    for (auto code : codes) {
+        disp = ((float)charsInfo[findPair1(charsInfo, code.first)].first / (float)str.size()) * (code.second.size() * averageLength);
+    }
+    cout << "\nDispersion: " << disp << endl;
 
-
+ 
     //Get encoded string
     cout << "Encoced string: ";
     string compressedString = "";
@@ -156,10 +164,10 @@ void  HuffmanCompress(string str) {
     while (index < (int)compressedString.size() - 2) {
         decode(compressedString, huffmanTree, index, result);
     }
-    cout << "\n" << result;
+    cout << result;
 
 
-    cout << "Коэффициент сжатия: " << (float)compressedString.size() / ((float)str.size() * 8);
+    cout << "\nКоэффициент сжатия: "  << (((float)str.size() * 8.0) / (float)compressedString.size());
 
     
 

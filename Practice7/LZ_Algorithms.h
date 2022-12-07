@@ -107,10 +107,10 @@ pair<string, float> LZ77(string input)
 	string compressedString = "";
 	for (auto code: codes) {
 		compressedString += '<' + to_string(get<0>(code)) + ',' + to_string(get<1>(code))
-			+ ',' + to_string(get<2>(code)) + ">";
+			+ ',' + get<2>(code) + ">";
 
 	}
-	return pair<string, float> {compressedString, (float)input.length() / (float)compressedString.length()};
+	return pair<string, float> {compressedString, (float)input.length() / ((float)compressedString.length() - 4*codes.size())};
 	
 }
 int findString(string str, vector<string> dictionary) {
@@ -153,10 +153,10 @@ int findString(string str, vector<string> dictionary) {
 	//Fill result : compression koeff and new string
 	string compressedString = "";
 	for (auto code : codes) {
-		compressedString += '<' + to_string(get<0>(code)) + ',' + to_string(get<1>(code)) + ">";
+		compressedString += '<' + to_string(get<0>(code)) + ',' + get<1>(code) + ">";
 
 	}
-	return pair<string, float> {compressedString, (float)input.length() / (float)compressedString.length()};
+	return pair<string, float> {compressedString, (float)input.length() / ((float)compressedString.length() -codes.size() * 3) };
 
 
 } 

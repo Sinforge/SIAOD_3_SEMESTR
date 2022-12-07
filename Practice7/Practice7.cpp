@@ -47,6 +47,7 @@ int main()
 
 
     //Test Huffman on large file
+    cout << "\n\nTest with large file\n";
     ifstream file("Test.txt", ios::in);
     string fileLine = "";
     string allText = "";
@@ -55,5 +56,7 @@ int main()
         allText += fileLine;
     }
     string compString = HuffmanCompressTest(allText);
-    cout << endl <<  (float)compString.size() / ((float)allText.size() * 8.0);
+    cout << "\n\nSize of encoded file in bytes: " << (float)compString.size() / 8.0;
+    cout << "\n\nSize of original file in bytes: " << allText.size();
+    cout << endl << "Коэффициент сжатия: " <<  ((float)allText.size() * 8.0) / (float)compString.size();
 }

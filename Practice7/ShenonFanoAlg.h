@@ -6,45 +6,45 @@
 #include <algorithm>
 using namespace std;
 
-pair<vector<pair<int,char>>, vector<pair<int, char>>> GetArrays(vector<pair<int, char>> arrayInput) {
-    //sort array in non-increasing
-    sort(arrayInput.begin(), arrayInput.end());
-    vector<pair<int, char>> array1 = vector<pair<int, char>>();
-    vector<pair<int, char>> array2 = vector<pair<int,char>>();
-    int borderIndex = -1;
-    int sum1 = 0, sum2 = 0;
-    if (arrayInput.size() == 2) {
-        array1.push_back(arrayInput[0]);
-        array2.push_back(arrayInput[1]);
-    }
-    else {
-        for (int i = 1; i < arrayInput.size() - 1; i++) {
-            sum1 = 0;
-            sum2 = 0;
-            for (int j = 0; j < i; j++) {
-                sum1 += arrayInput[j].first;
+    pair<vector<pair<int,char>>, vector<pair<int, char>>> GetArrays(vector<pair<int, char>> arrayInput) {
+        //sort array in non-increasing
+        sort(arrayInput.begin(), arrayInput.end());
+        vector<pair<int, char>> array1 = vector<pair<int, char>>();
+        vector<pair<int, char>> array2 = vector<pair<int,char>>();
+        int borderIndex = -1;
+        int sum1 = 0, sum2 = 0;
+        if (arrayInput.size() == 2) {
+            array1.push_back(arrayInput[0]);
+            array2.push_back(arrayInput[1]);
+        }
+        else {
+            for (int i = 1; i < arrayInput.size() - 1; i++) {
+                sum1 = 0;
+                sum2 = 0;
+                for (int j = 0; j < i; j++) {
+                    sum1 += arrayInput[j].first;
+                }
+                for (int j = i; j < arrayInput.size(); j++) {
+                    sum2 += arrayInput[j].first;
+                }
+                if (sum1 - sum2 > 0 || i == arrayInput.size() - 2) {
+                    borderIndex = i;
+                    break;
+                }
             }
-            for (int j = i; j < arrayInput.size(); j++) {
-                sum2 += arrayInput[j].first;
+            //fill left array
+            for (int i = 0; i < borderIndex; i++) {
+                array1.push_back(arrayInput[i]);
             }
-            if (sum1 - sum2 > 0 || i == arrayInput.size() - 2) {
-                borderIndex = i;
-                break;
+            //fill rigth array
+            for (int j = borderIndex; j < arrayInput.size(); j++) {
+                array2.push_back(arrayInput[j]);
             }
         }
-        //fill left array
-        for (int i = 0; i < borderIndex; i++) {
-            array1.push_back(arrayInput[i]);
-        }
-        //fill rigth array
-        for (int j = borderIndex; j < arrayInput.size(); j++) {
-            array2.push_back(arrayInput[j]);
-        }
-    }
-    return { array1, array2 };
+        return { array1, array2 };
 
 
-}
+    }
 
 struct ShenonFanoNode {
     ShenonFanoNode() {
@@ -184,9 +184,9 @@ void ShenonFanoAlgorithm(string str) {
     string decodedString = "";
     int currentId = -1;
     decode(encodedString, currentId, decodedString, Tree, Tree);
-    cout << "Decoded string: " << decodedString;
+    cout << "\nDecoded string: " << decodedString;
 
-    cout << "Коэффициент сжатия: " << (float)encodedString.size() / (float)str.size() * 8;
+    cout << "\nКоэффициент сжатия: " <<  (float)str.size() * 8.0 / (float)encodedString.size();
 
 }
 

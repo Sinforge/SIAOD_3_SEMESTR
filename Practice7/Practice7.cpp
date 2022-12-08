@@ -46,7 +46,8 @@ int main()
     
 
 
-    //Test Huffman on large file
+
+    //Test Huffman and ShenonFano on large file
     cout << "\n\nTest with large file\n";
     ifstream file("Test.txt", ios::in);
     string fileLine = "";
@@ -56,7 +57,15 @@ int main()
         allText += fileLine;
     }
     string compString = HuffmanCompressTest(allText);
+    cout << "\n\nHuffman with large file:";
     cout << "\n\nSize of encoded file in bytes: " << (float)compString.size() / 8.0;
     cout << "\n\nSize of original file in bytes: " << allText.size();
     cout << endl << "Коэффициент сжатия: " <<  ((float)allText.size() * 8.0) / (float)compString.size();
+
+    string compString1 = ShenonFanoAlgorithmTest(allText);
+    cout << "\n\nShenonFano with large file:";
+    cout << "\n\nSize of encoded file in bytes: " << (float)compString1.size() / 8.0;
+    cout << "\n\nSize of original file in bytes: " << allText.size();
+    cout << endl << "Коэффициент сжатия: " << ((float)allText.size() * 8.0) / (float)compString1.size();
+
 }

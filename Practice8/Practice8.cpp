@@ -7,21 +7,31 @@
 using namespace std;
 int main()
 {
-	string str1 = "Gitar", str2 = "Chainsaw", str3 = "Notebook";
-	vector<Item*> result = SolveBackpackTask(vector<Item*>{new Item(str1, 1, 1500), new Item(str2, 4, 3000), new Item(str3, 3, 2000) }, 4);
-	cout << "Your result\n";
-	for (auto item : result) {
-		item->Print();
+	string itemName;
+	int weight;
+	int price;
+	int capacityBackpack;
+	int countItems;
+
+	vector<Item*> items = vector<Item*>();
+	cout << "Enter how many items we have\n";
+	cin >> countItems;
+	for (int i = 0; i < countItems; i++) {
+		cout << "Enter Name, Weight and Price of item\n";
+		cin >> itemName >> weight >> price;
+		items.push_back(new Item(itemName, weight, price));
+	}
+	cout << "Enter capacity of backpack\n";
+	cin >> capacityBackpack;
+	cout << "Result:\n";
+	vector<Item*> result = SolveBackpackTask(items, capacityBackpack);
+	if (!result.empty()) {
+		for (auto item : result) {
+			item->Print();
+		}
+	}
+	else {
+		cout << "\nNone of the items fit in the bag.\n";
 	}
 }
 
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
-
-// Советы по началу работы 
-//   1. В окне обозревателя решений можно добавлять файлы и управлять ими.
-//   2. В окне Team Explorer можно подключиться к системе управления версиями.
-//   3. В окне "Выходные данные" можно просматривать выходные данные сборки и другие сообщения.
-//   4. В окне "Список ошибок" можно просматривать ошибки.
-//   5. Последовательно выберите пункты меню "Проект" > "Добавить новый элемент", чтобы создать файлы кода, или "Проект" > "Добавить существующий элемент", чтобы добавить в проект существующие файлы кода.
-//   6. Чтобы снова открыть этот проект позже, выберите пункты меню "Файл" > "Открыть" > "Проект" и выберите SLN-файл.

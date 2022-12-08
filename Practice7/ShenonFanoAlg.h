@@ -119,10 +119,10 @@ int findPair(vector<pair<char, string>> pairs, char symbol) {
     }
     return -1;
 }
-
+//101010111110101001
 void decode(string encodedString,int & currentId, string& decodedString, ShenonFanoNode * currentNode, ShenonFanoNode * Tree) {
     currentId++;
-    if (currentId >= encodedString.size()) {
+    if (currentId > encodedString.size()) {
         return;
     }
     if (currentNode->codes.size() == 1) {
@@ -189,4 +189,35 @@ void ShenonFanoAlgorithm(string str) {
     cout << "\nКоэффициент сжатия: " <<  (float)str.size() * 8.0 / (float)encodedString.size();
 
 }
+string ShenonFanoAlgorithmTest(string str) {
+    vector<pair<int, char>> charsInfo = vector<pair<int, char>>();
+    //Determinate all symbols
+    for (char c : str) {
+        int index = findPair(charsInfo, c);
+        if (index == -1) {
+            charsInfo.push_back(pair<int, char> {1, c});
+        }
+        else {
+            charsInfo.at(index).first++;
+        }
+    }
 
+    //Make tree
+    ShenonFanoNode* Tree = new ShenonFanoNode();
+    Tree->codes = charsInfo;
+    buildShenonFanoTree(Tree);
+
+
+    //Gets codes for our characters and print them
+    map<char, string> Codes = map<char, string>();
+    encode(Tree, Codes);
+
+    //Encode string
+    string encodedString = "";
+    for (char ch : str) {
+        encodedString += Codes[ch];
+    }
+    return encodedString;
+
+
+}
